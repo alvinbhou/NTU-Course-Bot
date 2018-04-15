@@ -30,7 +30,7 @@ for pageNum in range(0,PAGES):
         else:
             print(cols)
             continue
-        cols = [ele.text.replace('\n', '') for ele in cols]
+        cols = [ele.text.replace(';\n', '') for ele in cols]
         cols[15] = course_url
         cols[16] = gpa_url
         # drop useless column

@@ -4,15 +4,13 @@ const {
   MessengerBot,
   LineBot,
   TelegramBot,
-  SlackBot,
-  ViberBot,
 } = require('bottender');
 const { registerRoutes } = require('bottender/express');
 
 const handler = require('./handler');
 const config = require('./bottender.config');
-
 const server = express();
+
 
 server.use(
   bodyParser.json({
@@ -30,6 +28,6 @@ const bots = {
 registerRoutes(server, bots.line, { path: '/line' });
 registerRoutes(server, bots.telegram, { path: '/telegram' });
 
-server.listen(5000, () => {
-  console.log('server is listening on 5000 port...');
+server.listen(3000, () => {
+  console.log('server is listening on 3000 port...');
 });

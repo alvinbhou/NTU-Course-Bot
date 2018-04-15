@@ -1,0 +1,7 @@
+.*
+*config*
+*.db
+node_modules
+tmp
+
+!.gitignore
