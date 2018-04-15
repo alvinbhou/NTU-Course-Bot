@@ -8,7 +8,7 @@ const {
 const { registerRoutes } = require('bottender/express');
 
 const handler = require('./handler');
-const config = require('./bottender.config');
+const btconfig = require('./bottender.config');
 const server = express();
 
 
@@ -21,8 +21,8 @@ server.use(
 );
 
 const bots = {
-  line: new LineBot(config.line).onEvent(handler),
-  telegram: new TelegramBot(config.telegram).onEvent(handler),
+  line: new LineBot(btconfig.line).onEvent(handler),
+  telegram: new TelegramBot(btconfig.telegram).onEvent(handler),
 };
 
 registerRoutes(server, bots.line, { path: '/line' });

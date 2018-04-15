@@ -1,4 +1,5 @@
 const command =  require('./command');
+const config = require('./config');
 const ms = require('minimist-string');
 
 const getAction = function(text){
@@ -22,14 +23,26 @@ const getAction = function(text){
     
     /* COURSE COMMAND */
     if(action.cmd == command.commands_code.COURSE){
+        /* year argument */
         let year = args.y;
         if(year){
             if(year.length >= 4){
                 year = year.replace(/D/g, '');
                 year = year.substring(0,3) + '_' + year[year.length-1];
             }
+            else{
+                year = config.settings.cyear;
+            }
         }
-        action.course_year = year;
+        action.course_year = year ? year : config.settings.cyear;
+
+        /* gpa argument */
+        action.course_gpa = args.g ? args.g : -99;
+        
+        /* sort argument */
+        action.sort = args.s ? args.s : 0;
+
+
         /* test for user searches for CNAME or CUID */
         let course = args._.slice(1, args._.length).join(" ");
         let regex = /^[A-Za-z0-9 ]+$/;
