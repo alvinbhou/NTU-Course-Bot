@@ -5,7 +5,7 @@ module.exports = {
     cawaitnumlimit: 10
   },
   constant:{
-    CHANNEL: {
+    PLATFORM: {
       TG: 'telegram',
       LINE: 'line',
       MESSG: 'messenger'
@@ -15,6 +15,10 @@ module.exports = {
     },
     NUMBER:{
 
-    }
+    },
+  },
+  payload:{
+    GET_STARTED: 'GET_STARTED_PAYLOAD'
   }
+
 };

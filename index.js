@@ -7,7 +7,7 @@ const {
 } = require('bottender');
 const { registerRoutes } = require('bottender/express');
 
-const handler = require('./handler');
+const handler = require('./src/handler');
 const btconfig = require('./bottender.config');
 const server = express();
 
@@ -23,10 +23,12 @@ server.use(
 const bots = {
   line: new LineBot(btconfig.line).onEvent(handler),
   telegram: new TelegramBot(btconfig.telegram).onEvent(handler),
+  messenger: new MessengerBot(btconfig.messenger).onEvent(handler),
 };
 
 registerRoutes(server, bots.line, { path: '/line' });
 registerRoutes(server, bots.telegram, { path: '/telegram' });
+registerRoutes(server, bots.messenger, { path: '/messenger' });
 
 server.listen(3000, () => {
   console.log('server is listening on 3000 port...');
