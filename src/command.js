@@ -17,6 +17,11 @@ const commands_list = [
         name: 'department',
         alias: ['/d', '/dept', '/department'],
         code: 2
+    },
+    {
+        name: 'start',
+        alias: ['/start'],
+        code: 200
     }
    
 ]
@@ -25,6 +30,7 @@ const commands_code ={
     HELP: 0,
     COURSE: 1,
     DEPT: 2,
+    START: 200,
     UNDEFINED: -1
 }
 

@@ -9,6 +9,8 @@ const { registerRoutes } = require('bottender/express');
 
 const handler = require('./src/handler');
 const btconfig = require('./bottender.config');
+const messgapi = require('./src/messenger_api');
+
 const server = express();
 
 
@@ -32,4 +34,6 @@ registerRoutes(server, bots.messenger, { path: '/messenger' });
 
 server.listen(3000, () => {
   console.log('server is listening on 3000 port...');
+  /* init messenger api settings */
+  messgapi.init();
 });

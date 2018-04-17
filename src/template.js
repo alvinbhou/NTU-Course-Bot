@@ -1,16 +1,9 @@
 const config = require('./config');
-
+const emoji = require('./emoji');
 const gradeSymbol = ['A+', 'A', 'A-', 'B+', 'B', 'B-', 'C+', 'C', 'C-', 'F'];
-const markdownCode = (str) => {
-    return ('```\n' + str + '```')
-}
-const markdownLink = (text, link) => {
-    return ('[' + text + '](' + link + ')')
-}
-
-const toPercentage = (num) => {
-    return (num * 100).toFixed(0);
-}
+const markdownCode = (str) => { return ('```\n' + str + '```')}
+const markdownLink = (text, link) => { return ('[' + text + '](' + link + ')')}
+const toPercentage = (num) => { return (num * 100).toFixed(0);}
 
 const course = {
     telegram: function (course) {
@@ -51,10 +44,9 @@ const course = {
         courseInfo = markdownCode(courseInfo);
         let reply = courseHeader + courseInfo;
         return reply;
-
     },
     line: function (course) {
-        let courseHeader = `[${course.CNAME}]\n`;
+        let courseHeader = `[${course.CNAME}] [GPA ${course.AVGGPA}]\n`;
         let courseInfo = "";
         let accGPA = '無GPA資料';
         if (course.AVGGPA >= 0) {
@@ -106,7 +98,6 @@ const course = {
                 courseHeader += `[ ${course.CNAME}]\n`;
     
             }
-    
             let courseObj = [
                 ['學期', course.CYEAR],
                 ['班次', course.CLNUM],
@@ -204,7 +195,6 @@ const course = {
                     let sum = a + b + c +f;
                     // accGPA +=  toPercentage(a/sum) +'/' + toPercentage(b/sum) +'/' + toPercentage(c/sum) +'/'+ toPercentage(f/sum) + ' (A/B/C/F) %';
                     accGPA +=  a +'/' + b +'/' + c +'/'+ f + ' (A/B/C/F)';
-                    
                 }
                 let courseObj = [
                     ['教授', course.CPRO],
@@ -240,6 +230,44 @@ const course = {
     }
 };
 
+
+const start = `歡迎使用NTU Course Bot ${emoji.rabbit} \n可以使用 /h 或 /help 查看相關功能`;
+const help = {
+    telegram: () =>{
+        let reply = {};
+        reply.message =  `『幫助』 \n` +
+        `/h 或 /help 顯示說明文件\n\n` +
+        `『課程查詢』 \n/c [課程名稱] 或 /c [課程流水號]\n` +
+        `\t\t-選項\n\t\t-g [GPA] => 設定GPA搜尋下限\n\t\t-y [學期] => 指定特定學期\n\t\t-s       => 是否按照GPA排序\n\n` +
+        `『系所』\n` +
+        `/d [科系] [甜度] [必/選修]\n` +
+        `\t\t-選項\n\t\t-g [GPA] => 設定GPA搜尋下限\n\t\t-y [學期] => 指定特定學期`;
+        
+        reply.message = markdownCode(reply.message);
+        let inline_keyboard = 
+        {
+            reply_markup: {
+                inline_keyboard: [[{
+                    text: "查詢課名範例",
+                    callback_data: "TG_QUERY_COURSE_EXAMPLE1",
+                },{
+                    text: "課程流水號範例",
+                    callback_data: "TG_QUERY_COURSE_EXAMPLE2",
+                },{
+                    text: "查詢系所範例",
+                    callback_data: "TG_QUERY_DEPT_EXAMPLE",
+                }]],
+            },
+        }
+        reply.inlineHeader = `以下為不同指令的示範，可點擊參考`;
+        reply.inline = inline_keyboard;
+        return reply;
+    }
+            
+    
+}
 module.exports = {
-    course: course
+    course: course,
+    start: start,
+    help: help
 }

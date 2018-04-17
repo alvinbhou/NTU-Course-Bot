@@ -12,11 +12,12 @@ const getAction = function(text){
         argv: []
     };
     /* get command type */
-    let cmd = args._[0].toLowerCase();
+    let cmd = args._[0].toString().toLowerCase();
     for(let i = 0; i < command.commands_list.length; ++i){
         if(command.commands_list[i].alias.includes(cmd)){
             action.cmd = command.commands_list[i].code;
-            action.name = command.commands_list[i].name
+            action.name = command.commands_list[i].name;
+            
             break;
         }
     }
@@ -42,28 +43,21 @@ const getAction = function(text){
         /* sort argument */
         action.sort = args.s ? args.s : 0;
 
-
         /* test for user searches for CNAME or CUID */
         let course = args._.slice(1, args._.length).join(" ");
         let regex = /^[A-Za-z0-9 ]+$/;
-        action.argv.push(course);        
-        if(regex.test(course)){
-            action.course_type = 0;
-        }
-        else{
-            action.course_type = 1;
-        }
+        action.argv.push(course);  
+        action.course_type = regex.test(course) ? 0 : 1;      
     }
     /* DEPARTMENT COMMAND */
-    else if(action.cmd = command.commands_code.DEPT){
+    else if(action.cmd == command.commands_code.DEPT){
         let argv = [];
         for(var i = 1; i < messages.length; ++i){
             argv.push(messages[i]);
         }
         action.argv = argv;
     }
-
-   
+    
 
     return action;
 }
