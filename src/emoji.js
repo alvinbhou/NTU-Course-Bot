@@ -3,5 +3,10 @@ module.exports = {
     blowfish: '🐡',
     penguin: '🐧',
     rabbit: '🐰',
-    octopus: '🐙'    
-}
+    octopus: '🐙',
+    lightbulb: '💡',
+    blue_notebook: '📓',
+    graduation_cap: '🎓',
+    red_notebook: '📕',
+    sauropod: '🦕'
+} 
