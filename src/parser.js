@@ -26,7 +26,9 @@ const getAction = function(text){
     if(action.cmd == command.commands_code.COURSE){
         /* year argument */
         let year = args.y;
+        
         if(year){
+            year = year.toString();
             if(year.length >= 4){
                 year = year.replace(/D/g, '');
                 year = year.substring(0,3) + '_' + year[year.length-1];

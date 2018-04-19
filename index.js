@@ -35,5 +35,5 @@ registerRoutes(server, bots.messenger, { path: '/messenger' });
 server.listen(3000, () => {
   console.log('server is listening on 3000 port...');
   /* init messenger api settings */
-  messgapi.init();
+  // messgapi.init();
 });

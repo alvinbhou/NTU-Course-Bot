@@ -229,7 +229,7 @@ const course = {
 const undefined_reply = `抱歉，無法理解 ${emoji.sauropod}`;
 const start = `歡迎使用NTU Course Bot ${emoji.rabbit} \n可以使用 /h 或 /help 查看相關功能`;
 const help = {
-    telegram: () =>{
+    telegram: (() =>{
         let reply = {};
         reply.message =  `${emoji.lightbulb} 幫助 \n` +
         `/h 或 /help 顯示說明文件\n\n` +
@@ -244,22 +244,22 @@ const help = {
         {
             reply_markup: {
                 inline_keyboard: [[{
-                    text: "查詢課名",
-                    callback_data: "TG_QUERY_COURSE_EXAMPLE1",
+                    text: "課程",
+                    callback_data: "QUERY_COURSE",
                 },{
-                    text: "課程識別碼",
-                    callback_data: "TG_QUERY_COURSE_EXAMPLE2",
+                    text: "系所",
+                    callback_data: "QUERY_DEPT",
                 },{
-                    text: "查詢系所",
-                    callback_data: "TG_QUERY_DEPT_EXAMPLE",
+                    text: "教師",
+                    callback_data: "QUERY_TCHR",
                 }]],
             },
         }
-        reply.inlineHeader = `以下為不同指令的示範，可點擊參考`;
+        reply.inlineHeader = `以下為不同指令的詳細說明，可點擊參考`;
         reply.inline = inline_keyboard;
         return reply;
-    },
-    messenger: () =>{
+    })(),
+    messenger: (() =>{
         let reply = {};
         reply.message =  `${emoji.lightbulb} 幫助 \n` +
         `/h 或 /help 顯示說明文件\n\n` +
@@ -268,39 +268,127 @@ const help = {
         `${emoji.graduation_cap} 系所 \n` +
         `/d [科系] [甜度] [必/選修]\n` +
         `  -g [GPA] => GPA搜尋下限\n  -y [學期] => 指定學期`;
-        reply.quickreplyHeader = `以下為不同指令的示範，可點擊參考`;
+        reply.quickreplyHeader = `以下為不同指令的詳細說明，可點擊參考`;
         reply.quickreply = {
             quick_replies: [
               {
                 content_type: 'text',
-                title: '查詢課名',
-                payload: 'FB_QUERY_COURSE_EXAMPLE1',
+                title: '課程',
+                payload: 'QUERY_COURSE',
                 image_url: img.icons.red_search
 
               },
               {
                 content_type: 'text',
-                title: '課程識別碼',
-                payload: 'FB_QUERY_COURSE_EXAMPLE2',
-                image_url: img.icons.yellow_search
+                title: '系所',
+                payload: 'QUERY_DEPT',
+                image_url: img.icons.bank
               },
               {
                 content_type: 'text',
-                title: '查詢系所',
-                payload: 'FB_QUERY_COURSE_EXAMPLE1',
-                image_url: img.icons.bank
+                title: '教師',
+                payload: 'QUERY_TCHR',
+                image_url: img.icons.book
               },
             ],
         };
         return reply;
            
-    }
+    })()
             
     
+}
+const command_info = {
+    course: {
+        telegram: (() => {
+                let reply = {};
+                reply.message =  
+                `${emoji.red_notebook} 課程查詢 \n/c [課程名稱] 或 /c [課程識別碼]\n` +
+                `  -g [GPA] => GPA搜尋下限\n  -y [學期] => 指定學期\n  -s       => 照GPA排序\n\n` +
+                `Ex: 106-1 平均GPA>3.6 演算法，照GPA排序\n` +
+                config.constant.EXAMPLES.COURSE.TG_QUERY_COURSE_EXAMPLE1 + `\n\n` +
+                `Ex: 查詢課程識別碼 725 M2410\n` +
+                config.constant.EXAMPLES.COURSE.TG_QUERY_COURSE_EXAMPLE2 + '\n\n' +
+                `${emoji.whale} 附註\n` +
+                `預設學期為 ${config.settings.cyear} \n` +
+                `搜尋回傳數目上限為20筆`;
+
+                reply.message = markdownCode(reply.message);
+                return reply;
+            }
+        )(),
+        messenger: (() => {
+                let reply = {};
+                reply.message =  
+                `${emoji.red_notebook} 課程查詢 \n/c [課程名稱] 或 /c [課程識別碼]\n` +
+                `  -g [GPA] => GPA搜尋下限\n  -y [學期] => 指定學期\n  -s       => 照GPA排序\n\n` +
+                `Ex: 106-2 平均GPA>4的 機器學習\n\n` +
+                `/c 機器學習 -g 4 -y 106-2\n\n` +
+                `${emoji.whale} 附註\n` +
+                `預設學期為 ${config.settings.cyear} \n` +
+                `搜尋回傳數目上限為20筆\n` +
+                `課程卡片點擊會開啟課程詳細資訊`
+
+                reply.quickreplyHeader = `以下為更多示範，可點擊參考`;
+                reply.quickreply = {
+                    quick_replies: [
+                      {
+                        content_type: 'text',
+                        title: '查詢課程',
+                        payload: 'FB_QUERY_COURSE_EXAMPLE1',
+                        image_url: img.icons.red_search
+        
+                      },
+                      {
+                        content_type: 'text',
+                        title: '課程識別碼',
+                        payload: 'FB_QUERY_COURSE_EXAMPLE2',
+                        image_url: img.icons.yellow_search
+                      }
+                    ],
+                };
+                return reply;
+            }
+        )(),
+        
+    },
+    dept:{
+        telegram:(() =>{
+            let reply = {};
+                reply.message =  
+                `${emoji.graduation_cap} 系所 \n` +
+                `/d [科系] [甜度] [必/選修]\n` +
+                `  -g [GPA] => GPA搜尋下限\n  -y [學期] => 指定學期\n\n` +
+                `[甜度]\n很甜: GPA >= 4\n甜:GPA >= 3.7\n不甜：GPA <= 3.2\n\n` +
+                `[科系]\n 可使用中文或代號，例如電機 or EE\n\n` +
+                `[範例]\n/d 電機 很甜 必修 -y 106-1\n/d IM 選修 不甜\n\n` +
+                `${emoji.whale} 附註\n` +
+                `預設學期為 ${config.settings.cyear} \n` +
+                `搜尋回傳數目上限為20筆`;
+            reply.message =markdownCode(reply.message);
+            return reply;
+        })(),
+        messenger: (() => {
+                let reply = {};
+                reply.message =  
+                `${emoji.graduation_cap} 系所 \n` +
+                `/d [科系] [甜度] [必/選修]\n` +
+                `  -g [GPA] => GPA搜尋下限\n  -y [學期] => 指定學期\n\n` +
+                `[甜度]\n很甜: GPA >= 4\n甜:GPA >= 3.7\n不甜：GPA <= 3.2\n\n` +
+                `[科系]\n 可使用中文或代號，例如電機 or EE\n\n` +
+                `[範例]\n/d 電機 很甜 必修 -y 106-1\n/d IM 選修 不甜\n\n` +
+                `${emoji.whale} 附註\n` +
+                `預設學期為 ${config.settings.cyear} \n` +
+                `搜尋回傳數目上限為20筆`;
+                return reply;
+            }
+        )()
+    }
 }
 module.exports = {
     course: course,
     start: start,
     help: help,
-    undefined_reply: undefined_reply
+    undefined_reply: undefined_reply,
+    command_info: command_info
 }

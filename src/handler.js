@@ -23,6 +23,17 @@ const dbCourseQueryReply = function (sql, query_arr, context, action) {
 			return;
 		}
 
+		/* substitution */
+		for (let i = 0; i < rows.length; ++i) {
+			let row = rows[i];
+			if (row.CLNUM == config.constant.STRING.NOCLASSNUM) {
+				row.CLNUM = '無班次'
+			};
+			if(row.CTIME == -1){
+				row.CTIME = '無';
+			}
+		}
+
 		/* template for small number of query result */
 		if (rows.length == 1) {
 			switch (context.platform) {
@@ -37,8 +48,7 @@ const dbCourseQueryReply = function (sql, query_arr, context, action) {
 					return;
 					break;
 			}
-		} 
-		else if (rows.length <= 4 && rows.length >= 2) {
+		} else if (rows.length <= 4 && rows.length >= 2) {
 			switch (context.platform) {
 				case config.constant.PLATFORM.MESSG:
 					let elements = template.course.messenger.list(rows);
@@ -56,9 +66,6 @@ const dbCourseQueryReply = function (sql, query_arr, context, action) {
 		async function iterateCourse() {
 			for (let i = 0; i < rows.length; ++i) {
 				let row = rows[i];
-				if (row.CLNUM == config.constant.STRING.NOCLASSNUM) {
-					row.CLNUM = '無班次'
-				};
 				console.log(row.CYEAR, row.CNAME, row.CLNUM, row.CPRO, row.CREDIT, row.CTYPE, row.AVGGPA);
 				/* sort as descending order or not */
 				let reply = "";
@@ -82,7 +89,7 @@ const dbCourseQueryReply = function (sql, query_arr, context, action) {
 					}
 
 					/* prevent awaiting too long */
-					if (i > config.settings.cawaitnumlimit && action.sort ) {
+					if (i > config.settings.cawaitnumlimit && action.sort) {
 						reachLimitFlag = true;
 						break;
 					}
@@ -122,31 +129,20 @@ const dbCourseQueryReply = function (sql, query_arr, context, action) {
 
 };
 const courseQuery = function (context, action) {
-	
+
 	let query_target = action.course_type ? 'CNAME' : 'CUID';
 	let sql = `SELECT * FROM course
 					WHERE ${query_target} LIKE ? AND
 					CYEAR = ? AND
 					AVGGPA >= ?
 					ORDER BY AVGGPA DESC`;
-	let query_array = 	[sqlCPrefix(action.argv[0]), action.course_year, action.course_gpa];
+	let query_array = [sqlCPrefix(action.argv[0]), action.course_year, action.course_gpa];
 	dbCourseQueryReply(sql, query_array, context, action);
 
 };
 
 const deptQuery = function (context, action) {
-	let reachLimitFlag = false;
-	let query_target = action.dept_type ? 'DNAME' : 'DUID';
-	if (action.dept_name.length >= 15) {
-		context.sendText("系所名稱過長！");
-		return;
-	}
-
 	let sql = `SELECT * FROM course \n`;
-	/* dept name */
-	// for(let i = 0; i < action.dept_name.length; ++i){
-	// 	sql += `WHERE ${query_target} LIKE ? AND `;
-	// }
 	sql += `WHERE CYEAR = ? AND \n `;
 	sql += `CDEP = ? AND \n `;
 
@@ -169,23 +165,68 @@ const deptQuery = function (context, action) {
 	} else {
 		sql += `ORDER BY AVGGPA`;
 	}
-	console.log(sql);
-	let query_array = [action.course_year, action.dept_name, action.course_gpa];
-	dbCourseQueryReply(sql, query_array, context, action);
-	// db.all(sql, [action.course_year, action.dept_name, action.course_gpa], (err, rows) => {
-	// 	if (err) {
-	// 		throw err
-	// 	}
-	// 	for (let i = 0; i < rows.length; ++i) {
-	// 		let row = rows[i];
-	// 		if (row.CLNUM == config.constant.STRING.NOCLASSNUM) {
-	// 			row.CLNUM = '無班次'
-	// 		};
-	// 		console.log(row.CYEAR, row.CNAME, row.CLNUM, row.CPRO, row.CREDIT, row.CTYPE, row.AVGGPA);
-	// 	}
-	// });
+
+	/* 使用中文系所名稱 */
+	if (action.dept_type) {
+		if (action.dept_name.length >= 15) {
+			context.sendText("系所名稱過長！");
+			return;
+		}
+		let dsql = `SELECT * FROM department \nWHERE `;
+		/* dept name */
+		dsql += `DNAME LIKE ? `;
+		db.all(dsql, sqlCPrefix(action.dept_name), (err, rows) => {
+			console.log(rows);
+			(async function () {
+				if (rows.length == 0) {
+					context.sendText(`${emoji.blowfish} 找不到結果 ${emoji.blowfish}`)
+				} else if (rows.length >= 2) {
+					let reply = "請問是指下列哪個科系？\n\n";
+					rows.forEach((row) => {
+						reply += `[${row.DUID}] ${row.DNAME}\n`;
+					});
+					reply += `	\n或許可以使用[系所代號]更好搜尋！`
+					await context.sendText(reply);
+				}
+				/* query course! */
+				else if (rows.length == 1) {
+					let query_array = [action.course_year, rows[0].DUID, action.course_gpa];
+					dbCourseQueryReply(sql, query_array, context, action);
+				}
+			})()
+		});
+	}
+	/* 使用系所代號 */
+	else{
+		let query_array = [action.course_year, action.dept_name.toUpperCase(), action.course_gpa];
+		dbCourseQueryReply(sql, query_array, context, action);
+	}
 }
 
+const commandInfoReply = async function (code, context) {
+	if (code == command.commands_code.COURSE) {
+		if (context.platform == config.constant.PLATFORM.TG) {
+			let reply = template.command_info.course.telegram;
+			await context.sendMessage(reply.message, {
+				parse_mode: 'Markdown'
+			}).catch(console.error);;
+		} else if (context.platform == config.constant.PLATFORM.MESSG) {
+			let reply = template.command_info.course.messenger;
+			await context.sendText(reply.message);
+			await context.sendText(reply.quickreplyHeader, reply.quickreply).catch(console.error);
+		}
+	} else if (code == command.commands_code.DEPT) {
+		if (context.platform == config.constant.PLATFORM.TG) {
+			let reply = template.command_info.dept.telegram;
+			await context.sendMessage(reply.message, {
+				parse_mode: 'Markdown'
+			}).catch(console.error);;
+		} else if (context.platform == config.constant.PLATFORM.MESSG) {
+			let reply = template.command_info.dept.messenger;
+			await context.sendText(reply.message);
+		}
+	}
+}
 
 const handler = async context => {
 	/* postback event: messenger */
@@ -193,32 +234,53 @@ const handler = async context => {
 		if (context.event.payload == config.payload.GET_STARTED) {
 			await context.sendText(template.start);
 		}
+		return;
 	}
 
 	/* postback query event: telegram*/
 	if (context.event.isCallbackQuery) {
 		if (context.platform == config.constant.PLATFORM.TG) {
-			let callback_data = config.constant.STRING[context.event.callbackQuery.data];
-			let action = parser.getAction(callback_data);
-			await context.sendText(callback_data);
-			courseQuery(context, action);
+			let payload = context.event.callbackQuery.data;
+			if (payload == config.payload.QUERY_COURSE) {
+				commandInfoReply(command.commands_code.COURSE, context);
+			} else if (payload == config.payload.QUERY_DEPT) {
+				commandInfoReply(command.commands_code.DEPT, context);
+			}
 		}
+		return;
 
 	}
 	/* quick reply event: messenger */
 	if (context.event.isQuickReply) {
 		let payload = context.event.quickReply.payload;
-		let callback_data = config.constant.STRING[payload];
-		let action = parser.getAction(callback_data);
-		await context.sendText(callback_data);
-		courseQuery(context, action);
+		console.log(payload);
+
+		if (payload == config.payload.QUERY_COURSE) {
+			let callback_data = config.constant.STRING[payload];
+			await context.sendText(callback_data);
+			commandInfoReply(command.commands_code.COURSE, context);
+		} else if (payload == config.payload.QUERY_DEPT) {
+			let callback_data = config.constant.STRING[payload];
+			await context.sendText(callback_data);
+			commandInfoReply(command.commands_code.DEPT, context);
+
+		} else if (payload in config.constant.EXAMPLES.COURSE) {
+			let callback_data = config.constant.EXAMPLES.COURSE[payload];
+			await context.sendText(callback_data);
+			let action = parser.getAction(callback_data);
+			courseQuery(context, action);
+		}
+		return;
 	}
 
 	/* text event */
 	if (context.event.isText) {
 		const text = context.event.text;
+		if (config.whitelist.indexOf(text) > 0) {
+			return;
+		}
 		let action = parser.getAction(text);
-		context.typing(1000);
+		await context.typing(200);
 		console.log(action);
 		/* get started */
 		if (action.cmd == command.commands_code.START) {
@@ -226,25 +288,36 @@ const handler = async context => {
 		}
 		/* course command */
 		else if (action.cmd == command.commands_code.COURSE) {
-			courseQuery(context, action);
-		} 
+			if (!action.argv.length) {
+				commandInfoReply(action.cmd, context);
+			} else if (action.argv[0].length == 0) {
+				commandInfoReply(action.cmd, context);
+			} else {
+				courseQuery(context, action);
+
+			}
+		}
 		/* department command */
 		else if (action.cmd == command.commands_code.DEPT) {
-			deptQuery(context, action);
+			if (!action.dept_name.length) {
+				commandInfoReply(action.cmd, context);
+			} else {
+				deptQuery(context, action);
+			}
 		}
 		/* help command*/
 		else if (action.cmd == command.commands_code.HELP) {
 			let reply = {};
 			switch (context.platform) {
 				case config.constant.PLATFORM.TG:
-					reply = template.help.telegram();
+					reply = template.help.telegram;
 					await context.sendMessage(reply.message, {
 						parse_mode: 'Markdown'
 					});
 					await context.sendMessage(reply.inlineHeader, reply.inline).catch(console.error);
 					break;
 				case config.constant.PLATFORM.MESSG:
-					reply = template.help.messenger();
+					reply = template.help.messenger;
 					await context.sendText(reply.message);
 					await context.sendText(reply.quickreplyHeader, reply.quickreply).catch(console.error);
 					break;
