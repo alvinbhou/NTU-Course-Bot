@@ -24,7 +24,8 @@ var whiteListOptions = {
   headers: { 'content-type': 'application/json' },
   body: 
    { whitelisted_domains: 
-      [ 
+      [ 'https://cryolitez.github.io/',
+      'https://github.com/',
         'https://raw.githubusercontent.com/',
       'https://i.imgur.com/',
     'https://nol.ntu.edu.tw'] },

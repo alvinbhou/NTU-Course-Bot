@@ -19,6 +19,11 @@ const commands_list = [
         code: 2
     },
     {
+        name: 'teacher',
+        alias: ['/t', '/teacher'],
+        code: 3
+    },
+    {
         name: 'start',
         alias: ['/start'],
         code: 200
@@ -30,6 +35,7 @@ const commands_code ={
     HELP: 0,
     COURSE: 1,
     DEPT: 2,
+    TEACHER: 3,
     START: 200,
     UNDEFINED: -1
 }

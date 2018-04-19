@@ -8,5 +8,6 @@ module.exports = {
     blue_notebook: '📓',
     graduation_cap: '🎓',
     red_notebook: '📕',
-    sauropod: '🦕'
+    sauropod: '🦕',
+    palette: '🎨'
 } 

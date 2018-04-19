@@ -32,6 +32,7 @@ const dbCourseQueryReply = function (sql, query_arr, context, action) {
 			if(row.CTIME == -1){
 				row.CTIME = '無';
 			}
+			console.log(row.CYEAR, row.CNAME, row.CLNUM, row.CPRO, row.CREDIT, row.CTYPE, row.AVGGPA);
 		}
 
 		/* template for small number of query result */
@@ -48,25 +49,25 @@ const dbCourseQueryReply = function (sql, query_arr, context, action) {
 					return;
 					break;
 			}
-		} else if (rows.length <= 4 && rows.length >= 2) {
+		} else if (rows.length <= 10 && rows.length >= 2) {
 			switch (context.platform) {
 				case config.constant.PLATFORM.MESSG:
 					let elements = template.course.messenger.list(rows);
-					context.sendListTemplate(elements, [], {
-							top_element_style: 'compact'
+					context.sendGenericTemplate(elements, [], {
+							// top_element_style: 'compact'
 						})
 						.catch((error) => {
 							console.log(error);
 						});
-					return;
-					break;
+				return;
+				break;
 			}
 		}
 
 		async function iterateCourse() {
 			for (let i = 0; i < rows.length; ++i) {
 				let row = rows[i];
-				console.log(row.CYEAR, row.CNAME, row.CLNUM, row.CPRO, row.CREDIT, row.CTYPE, row.AVGGPA);
+				
 				/* sort as descending order or not */
 				let reply = "";
 				if (action.sort || i == Math.min(rows.length, config.settings.cnumlimit)) {
@@ -179,7 +180,7 @@ const deptQuery = function (context, action) {
 			console.log(rows);
 			(async function () {
 				if (rows.length == 0) {
-					context.sendText(`${emoji.blowfish} 找不到結果 ${emoji.blowfish}`)
+					context.sendText(`${emoji.blowfish} 找不到結果，或許可以打全名或是系所代號 ${emoji.blowfish}`)
 				} else if (rows.length >= 2) {
 					let reply = "請問是指下列哪個科系？\n\n";
 					rows.forEach((row) => {
@@ -199,6 +200,22 @@ const deptQuery = function (context, action) {
 	/* 使用系所代號 */
 	else{
 		let query_array = [action.course_year, action.dept_name.toUpperCase(), action.course_gpa];
+		dbCourseQueryReply(sql, query_array, context, action);
+	}
+}
+
+const tchrQuery = function(context, action){
+	let sql = `SELECT * FROM course \n`;
+	sql += `WHERE CYEAR = ? AND \n `;
+	sql += `CPRO LIKE ? AND \n `;
+	sql += `AVGGPA >= ? `;
+	sql += `ORDER BY AVGGPA DESC`;
+	if(action.tchr_name.length == 0){
+		context.sendText(`${emoji.blowfish} 找不到教師 ${emoji.blowfish}`);
+		return;
+	}
+	else{
+		let query_array = [action.course_year,sqlCPrefix(action.tchr_name), action.course_gpa];
 		dbCourseQueryReply(sql, query_array, context, action);
 	}
 }
@@ -226,6 +243,17 @@ const commandInfoReply = async function (code, context) {
 			await context.sendText(reply.message);
 		}
 	}
+	else if (code == command.commands_code.TEACHER) {
+		if (context.platform == config.constant.PLATFORM.TG) {
+			let reply = template.command_info.teacher.telegram;
+			await context.sendMessage(reply.message, {
+				parse_mode: 'Markdown'
+			}).catch(console.error);;
+		} else if (context.platform == config.constant.PLATFORM.MESSG) {
+			let reply = template.command_info.teacher.messenger;
+			await context.sendText(reply.message);
+		}
+	}
 }
 
 const handler = async context => {
@@ -245,6 +273,10 @@ const handler = async context => {
 				commandInfoReply(command.commands_code.COURSE, context);
 			} else if (payload == config.payload.QUERY_DEPT) {
 				commandInfoReply(command.commands_code.DEPT, context);
+			}else if (payload == config.payload.QUERY_TCHR) {
+				commandInfoReply(command.commands_code.TEACHER, context);
+			}else if (payload == config.payload.GITHUB_PAYLOAD) {
+				await context.sendText(config.github.url);
 			}
 		}
 		return;
@@ -264,11 +296,23 @@ const handler = async context => {
 			await context.sendText(callback_data);
 			commandInfoReply(command.commands_code.DEPT, context);
 
-		} else if (payload in config.constant.EXAMPLES.COURSE) {
+		}else if (payload == config.payload.QUERY_TCHR) {
+			let callback_data = config.constant.STRING[payload];
+			await context.sendText(callback_data);
+			commandInfoReply(command.commands_code.TEACHER, context);
+		} 
+		else if (payload in config.constant.EXAMPLES.COURSE) {
 			let callback_data = config.constant.EXAMPLES.COURSE[payload];
 			await context.sendText(callback_data);
 			let action = parser.getAction(callback_data);
 			courseQuery(context, action);
+		}
+		else if(payload == config.payload.GITHUB_PAYLOAD){
+			let elements = template.more_info;
+			context.sendGenericTemplate(elements, [], {})
+				.catch((error) => {
+					console.log(error);
+				});
 		}
 		return;
 	}
@@ -303,6 +347,13 @@ const handler = async context => {
 				commandInfoReply(action.cmd, context);
 			} else {
 				deptQuery(context, action);
+			}
+		}
+		else if(action.cmd == command.commands_code.TEACHER){
+			if (!action.tchr_name.length) {
+				commandInfoReply(action.cmd, context);
+			} else {
+				tchrQuery(context, action);
 			}
 		}
 		/* help command*/

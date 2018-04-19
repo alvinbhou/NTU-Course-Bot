@@ -56,6 +56,7 @@ const getAction = function(text){
         /* year argument */
         let year = args.y;
         if(year){
+            year = year.toString();
             if(year.length >= 4){
                 year = year.replace(/D/g, '');
                 year = year.substring(0,3) + '_' + year[year.length-1];
@@ -112,6 +113,33 @@ const getAction = function(text){
         if(args.g){ action.gpa_above = 1;}
 
         
+        
+    }
+
+    /* TEACHER COMMAND */
+    else if(action.cmd == command.commands_code.TEACHER){
+        action.tchr_name = "";
+        for(let i = 0; i < args._.length; ++i){
+            if(i == 0) continue;
+            if(i == 1) action.tchr_name = args._[i];
+        }
+
+        /* year argument */
+        let year = args.y;
+        if(year){
+            year = year.toString();
+            if(year.length >= 4){
+                year = year.replace(/D/g, '');
+                year = year.substring(0,3) + '_' + year[year.length-1];
+            }
+            else{
+                year = config.settings.cyear;
+            }
+        }
+        action.course_year = year ? year : config.settings.cyear;
+
+         /* gpa argument */
+         action.course_gpa = args.g ? args.g : -99;
         
     }
     

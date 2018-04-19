@@ -40,8 +40,13 @@ module.exports = {
     GET_STARTED: 'GET_STARTED_PAYLOAD',
     QUERY_COURSE: 'QUERY_COURSE',
     QUERY_DEPT: 'QUERY_DEPT',
-    QUERY_TCHR: 'QUERY_TCHR'
+    QUERY_TCHR: 'QUERY_TCHR',
+    GITHUB_PAYLOAD: 'GITHUB_PAYLOAD'
   },
-  whitelist: ['課程', '系所', '教師']
+  whitelist: ['課程', '系所', '教師'],
+  github:{
+    img: 'https://cryolitez.github.io/images/me.jpg',
+    url: 'https://github.com/CryoliteZ/NTU-Course-Bot',
+  }
 
 };

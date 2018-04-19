@@ -122,25 +122,39 @@ const course = {
             let elements = [];
             courses.forEach(course => {
                 let e = {};
-                if (course.CLNUM == config.constant.STRING.NOCLASSNUM) {
-                    course.CLNUM = '無班次'
-                };
                 e.title = course.CNAME;
                 let accGPA = '無GPA資料';
                 if (course.AVGGPA >= 0) {
                     accGPA = '';
+                    let a = 0;
+                    let b = 0;
+                    let c = 0;
+                    let f = 0;
                     gradeSymbol.forEach((sym, idx) => {
-                        accGPA += course[sym];
-                        if (idx != gradeSymbol.length - 1) {
-                            accGPA += '|';
+                        if(idx <= 2){
+                            a += course[sym];
+                        }
+                        else if(idx <= 5){
+                            b += course[sym];
+                        }
+                        else if(idx <= 8){
+                            c += course[sym];
+                        }
+                        else{
+                            f += course[sym];
                         }
                     });
-                    accGPA += ' (A~F)';
+                    let sum = a + b + c +f;
+                    // accGPA +=  toPercentage(a/sum) +'/' + toPercentage(b/sum) +'/' + toPercentage(c/sum) +'/'+ toPercentage(f/sum) + ' (A/B/C/F) %';
+                    accGPA +=  a +'/' + b +'/' + c +'/'+ f + ' (A/B/C/F)';
                 }
                 let courseObj = [
                     ['教授', course.CPRO],
                     ['平均', course.AVGGPA >= 0 ? course.AVGGPA : "無資料"],
                     ['時間', course.CTIME],
+                    ['等第', accGPA],                    
+                    ['人數', course.CLIMIT],
+                    ['班次', course.CLNUM]
                 ];
                 let courseInfo = "";
                 courseObj.forEach(c => {
@@ -163,9 +177,6 @@ const course = {
             let elements = [];
             courses.forEach(course => {
                 let e = {};
-                if (course.CLNUM == config.constant.STRING.NOCLASSNUM) {
-                    course.CLNUM = '無班次'
-                };
                 e.title = course.CNAME;
                 let accGPA = '無GPA資料';
                 if (course.AVGGPA >= 0) {
@@ -203,6 +214,7 @@ const course = {
                 courseObj.forEach(c => {
                     courseInfo += c[0] + ' \t: ' + c[1] + '\n';
                 });
+               
                 e.subtitle = courseInfo;
                 e.default_action = {
                     type: 'web_url',
@@ -233,11 +245,13 @@ const help = {
         let reply = {};
         reply.message =  `${emoji.lightbulb} 幫助 \n` +
         `/h 或 /help 顯示說明文件\n\n` +
-        `${emoji.red_notebook} 課程查詢 \n/c [課程名稱] 或 /c [課程識別碼]\n` +
-        `\t\t-選項\n\t\t-g [GPA] => GPA搜尋下限\n\t\t-y [學期] => 指定學期\n\t\t-s       => 照GPA排序\n\n` +
+        `${emoji.red_notebook} 課程查詢 \n/c [課程名稱] 或 /c [課程識別碼]\n\n` +
         `${emoji.graduation_cap} 系所\n` +
-        `/d [科系] [甜度] [必/選修]\n` +
-        `\t\t-選項\n\t\t-g [GPA] => GPA搜尋下限\n\t\t-y [學期] => 指定學期`;
+        `/d [科系] [甜度] [必/選修]\n\n` +
+        `${emoji.palette} 教師\n` +
+        `/t [教師名稱]\n\n` +
+        ` {參數} \n` +
+        `  -g [GPA] => GPA下限\n  -y [學期] => 指定學期\n`;
         
         reply.message = markdownCode(reply.message);
         let inline_keyboard = 
@@ -252,6 +266,9 @@ const help = {
                 },{
                     text: "教師",
                     callback_data: "QUERY_TCHR",
+                },{
+                    text: "更多",
+                    callback_data: "GITHUB_PAYLOAD",
                 }]],
             },
         }
@@ -263,11 +280,13 @@ const help = {
         let reply = {};
         reply.message =  `${emoji.lightbulb} 幫助 \n` +
         `/h 或 /help 顯示說明文件\n\n` +
-        `${emoji.red_notebook} 課程查詢 \n/c [課程名稱] 或 /c [課程識別碼]\n` +
-        `  -g [GPA] => GPA搜尋下限\n  -y [學期] => 指定學期\n  -s       => 照GPA排序\n\n` +
+        `${emoji.red_notebook} 課程查詢 \n/c [課程名稱] 或 /c [課程識別碼]\n\n` +
         `${emoji.graduation_cap} 系所 \n` +
-        `/d [科系] [甜度] [必/選修]\n` +
-        `  -g [GPA] => GPA搜尋下限\n  -y [學期] => 指定學期`;
+        `/d [科系] [甜度] [必/選修]\n\n` +
+        `${emoji.palette} 教師\n` +
+        `/t [教師名稱]\n\n` +
+        ` {參數} \n` +
+        `  -g [GPA] => GPA下限\n  -y [學期] => 指定學期\n`;
         reply.quickreplyHeader = `以下為不同指令的詳細說明，可點擊參考`;
         reply.quickreply = {
             quick_replies: [
@@ -290,6 +309,12 @@ const help = {
                 payload: 'QUERY_TCHR',
                 image_url: img.icons.book
               },
+              {
+                content_type: 'text',
+                title: '更多',
+                payload: 'GITHUB_PAYLOAD',
+                image_url: img.icons.github
+              }
             ],
         };
         return reply;
@@ -326,8 +351,7 @@ const command_info = {
                 `/c 機器學習 -g 4 -y 106-2\n\n` +
                 `${emoji.whale} 附註\n` +
                 `預設學期為 ${config.settings.cyear} \n` +
-                `搜尋回傳數目上限為20筆\n` +
-                `課程卡片點擊會開啟課程詳細資訊`
+                `搜尋回傳數目上限為20筆\n`;
 
                 reply.quickreplyHeader = `以下為更多示範，可點擊參考`;
                 reply.quickreply = {
@@ -383,12 +407,63 @@ const command_info = {
                 return reply;
             }
         )()
+    },
+    teacher:{
+        telegram:(() =>{
+            let reply = {};
+                reply.message =  
+                `${emoji.palette} 教師\n` +
+                `/t [教師名稱]\n` +
+                `  -g [GPA] => GPA搜尋下限\n  -y [學期] => 指定學期\n\n` +
+                `Ex: /t 孔令傑 -g 2.7\n\n` +
+                `${emoji.whale} 附註\n` +
+                `預設學期為 ${config.settings.cyear} \n` +
+                `搜尋回傳數目上限為20筆`;
+            reply.message =markdownCode(reply.message);
+            return reply;
+        })(),
+        messenger:(() =>{
+            let reply = {};
+                reply.message =  
+                `${emoji.palette} 教師\n` +
+                `/t [教師名稱]\n` +
+                `  -g [GPA] => GPA搜尋下限\n  -y [學期] => 指定學期\n\n` +
+                `Ex: /t 孔令傑 -g 2.7\n\n` +
+                `${emoji.whale} 附註\n` +
+                `預設學期為 ${config.settings.cyear} \n` +
+                `搜尋回傳數目上限為20筆`;
+            return reply;
+        })(),
     }
 }
+
+const more_info = {
+    messenger : [{
+        title: "NTU Course Bot",
+        image_url: config.github.img,
+        subtitle: '不同平台說明和更詳細的document',
+        default_action: {
+            type: 'web_url',
+            url: config.github.url,
+            messenger_extensions: true,
+            webview_height_ratio: 'tall',
+            fallback_url: config.github.url,
+        },
+        buttons: [
+            {
+                type: 'web_url',
+                url: config.github.url,
+                title: 'Github'
+            }
+        ]
+    }],
+}
+
 module.exports = {
     course: course,
     start: start,
     help: help,
     undefined_reply: undefined_reply,
-    command_info: command_info
+    command_info: command_info,
+    more_info: more_info
 }
