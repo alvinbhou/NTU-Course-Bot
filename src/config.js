@@ -22,7 +22,7 @@ module.exports = {
       COURSE: {
         TG_QUERY_COURSE_EXAMPLE1: '/c 演算法 -g 3.6 -y 106-1 -s',
         TG_QUERY_COURSE_EXAMPLE2: '/c 725 M2410',
-        FB_QUERY_COURSE_EXAMPLE1: '/c 演算法 -g 3.6 -y 106-1',
+        FB_QUERY_COURSE_EXAMPLE1: '/c 機器學習 -g 3.5',
         FB_QUERY_COURSE_EXAMPLE2: '/c 725 M2410',
       },
       DEPT:{

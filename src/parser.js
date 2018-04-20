@@ -49,7 +49,7 @@ const getAction = function(text){
         let course = args._.slice(1, args._.length).join(" ");
         let regex = /^[A-Za-z0-9 ]+$/;
         action.argv.push(course);  
-        action.course_type = regex.test(course) ? 0 : 1;      
+        action.course_type = (regex.test(course) && course.length == 9 && /\d/.test(course[course.length-1])) ? 0 : 1;      
     }
     /* DEPARTMENT COMMAND */
     else if(action.cmd == command.commands_code.DEPT){

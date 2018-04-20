@@ -32,7 +32,13 @@ const dbCourseQueryReply = function (sql, query_arr, context, action) {
 			if(row.CTIME == -1){
 				row.CTIME = '無';
 			}
-			console.log(row.CYEAR, row.CNAME, row.CLNUM, row.CPRO, row.CREDIT, row.CTYPE, row.AVGGPA);
+			if(row.CPRO == -1){
+				row.CPRO = '?';
+			}
+			if(row.CDEPNAME ==  config.constant.STRING.NOCDEPNAME){
+				row.CDEPNAME = '?';
+			}
+			console.log(row.CYEAR, row.CNAME, row.CLNUM, row.CPRO, row.CDEPNAME, row.CTYPE, row.AVGGPA);
 		}
 
 		/* template for small number of query result */
@@ -261,6 +267,9 @@ const handler = async context => {
 	if (context.event.isPostback) {
 		if (context.event.payload == config.payload.GET_STARTED) {
 			await context.sendText(template.start);
+			let reply = template.help.messenger;
+			await context.sendText(reply.message);
+			await context.sendText(reply.quickreplyHeader, reply.quickreply).catch(console.error);
 		}
 		return;
 	}
@@ -308,7 +317,7 @@ const handler = async context => {
 			courseQuery(context, action);
 		}
 		else if(payload == config.payload.GITHUB_PAYLOAD){
-			let elements = template.more_info;
+			let elements = template.more_info.messenger;
 			context.sendGenericTemplate(elements, [], {})
 				.catch((error) => {
 					console.log(error);
