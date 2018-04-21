@@ -29,7 +29,8 @@ let help_messages = {
         `[範例]\n/d 電機 很甜 必修 -y 106-1\n/d IM 選修 不甜\n\n` +
         `${emoji.whale} 附註\n` +
         `預設學期為 ${config.settings.cyear} \n` +
-        `搜尋回傳數目上限為20筆`,
+        `搜尋回傳數目上限為20\n` +
+        `隱藏專題研究課程` ,
     teacher:  `${emoji.palette} 教師\n` +
         `/t [教師名稱]\n` +
         `  -g [GPA] => GPA搜尋下限\n  -y [學期] => 指定學期\n\n` +
@@ -335,7 +336,7 @@ const more_info = {
     messenger: [{
         title: "NTU Course Bot",
         image_url: config.github.img,
-        subtitle: '不同平台說明和更詳細的document',
+        subtitle: '不同平台說明和documentation',
         default_action: {
             type: 'web_url',
             url: config.github.url,
@@ -347,6 +348,10 @@ const more_info = {
             type: 'web_url',
             url: config.github.url,
             title: 'Github'
+        },{
+            type: 'web_url',
+            url: config.telegram.url,
+            title: 'Telegram'
         }]
     }],
 }

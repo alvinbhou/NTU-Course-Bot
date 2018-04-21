@@ -1,5 +1,7 @@
 const express = require('express');
 const bodyParser = require('body-parser');
+const https = require('https');
+const fs = require('fs');
 const {
   MessengerBot,
   LineBot,
@@ -31,8 +33,21 @@ registerRoutes(server, bots.line, { path: '/line' });
 registerRoutes(server, bots.telegram, { path: '/telegram' });
 registerRoutes(server, bots.messenger, { path: '/messenger' });
 
-server.listen(port, () => {
-  console.log(`server is listening on ${port} port...`);
-  /* init messenger api settings */
-  messgapi.init();
-});
+if(btconfig.credential){
+  let options = {
+    key: fs.readFileSync(btconfig.credential.key),
+    cert: fs.readFileSync(btconfig.credential.cert),
+    ca: fs.readFileSync(btconfig.credential.ca),
+  }
+  https.createServer(options, server).listen(8443, () =>{
+    console.log(`server is listening on 8443 port`);
+  });
+}
+else{
+  server.listen(port, () => {
+    console.log(`server is listening on ${port} port...`);
+    /* init messenger api settings */
+    messgapi.init();
+  });
+}
+

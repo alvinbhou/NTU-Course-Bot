@@ -12,10 +12,11 @@ module.exports = {
     },
     STRING:{
       NOCLASSNUM: '%NOCLNUM%',
-
+      NOCDEPNAME: '%NODEPT%',
       QUERY_COURSE: '/c',
       QUERY_DEPT: '/d',
-      QUERY_TCHR: '/t'
+      QUERY_TCHR: '/t',
+      SPECIAL_STUDY: '專題'
 
     },
     EXAMPLES:{
@@ -47,6 +48,9 @@ module.exports = {
   github:{
     img: 'https://cryolitez.github.io/images/me.jpg',
     url: 'https://github.com/CryoliteZ/NTU-Course-Bot',
+  },
+  telegram:{
+    url: 'https://t.me/ntucoursebot'
   }
 
 };

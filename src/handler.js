@@ -36,7 +36,7 @@ const dbCourseQueryReply = function (sql, query_arr, context, action) {
 				row.CPRO = '?';
 			}
 			if(row.CDEPNAME ==  config.constant.STRING.NOCDEPNAME){
-				row.CDEPNAME = '?';
+				row.CDEPNAME = row.CDEP;
 			}
 			console.log(row.CYEAR, row.CNAME, row.CLNUM, row.CPRO, row.CDEPNAME, row.CTYPE, row.AVGGPA);
 		}
@@ -152,6 +152,7 @@ const deptQuery = function (context, action) {
 	let sql = `SELECT * FROM course \n`;
 	sql += `WHERE CYEAR = ? AND \n `;
 	sql += `CDEP = ? AND \n `;
+	sql += `CNAME NOT LIKE '%${config.constant.STRING.SPECIAL_STUDY}%' AND \n`
 
 	/* gpa */
 	if (action.gpa_above) {
@@ -265,12 +266,28 @@ const commandInfoReply = async function (code, context) {
 const handler = async context => {
 	/* postback event: messenger */
 	if (context.event.isPostback) {
+		console.log(context.event.payload);
+		let payload = context.event.payload;
 		if (context.event.payload == config.payload.GET_STARTED) {
 			await context.sendText(template.start);
 			let reply = template.help.messenger;
 			await context.sendText(reply.message);
 			await context.sendText(reply.quickreplyHeader, reply.quickreply).catch(console.error);
 		}
+		else if (payload == config.payload.QUERY_COURSE) {
+			let callback_data = config.constant.STRING[payload];
+			await context.sendText(callback_data);
+			commandInfoReply(command.commands_code.COURSE, context);
+		} else if (payload == config.payload.QUERY_DEPT) {
+			let callback_data = config.constant.STRING[payload];
+			await context.sendText(callback_data);
+			commandInfoReply(command.commands_code.DEPT, context);
+
+		}else if (payload == config.payload.QUERY_TCHR) {
+			let callback_data = config.constant.STRING[payload];
+			await context.sendText(callback_data);
+			commandInfoReply(command.commands_code.TEACHER, context);
+		} 
 		return;
 	}
 
@@ -337,7 +354,24 @@ const handler = async context => {
 		console.log(action);
 		/* get started */
 		if (action.cmd == command.commands_code.START) {
-			await context.sendText(template.start);
+			let reply = {};
+			switch(context.platform){
+				case config.constant.PLATFORM.TG:
+					await context.sendText(template.start);
+					reply = template.help.telegram;
+					await context.sendMessage(reply.message, {
+						parse_mode: 'Markdown'
+					});
+					await context.sendMessage(reply.inlineHeader, reply.inline).catch(console.error);
+					break;
+				case config.constant.PLATFORM.MESSG:
+					await context.sendText(template.start);
+					reply = template.help.messenger;
+					await context.sendText(reply.message);
+					await context.sendText(reply.quickreplyHeader, reply.quickreply).catch(console.error);
+					break;
+			}
+			
 		}
 		/* course command */
 		else if (action.cmd == command.commands_code.COURSE) {
