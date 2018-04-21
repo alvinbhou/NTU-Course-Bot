@@ -1,7 +1,10 @@
 module.exports = {
   settings:{
     cyear: '106_2',
-    cnumlimit: 20,
+    cnumlimit:{
+      messenger: 40,
+      telegram: 20
+    } ,
     cawaitnumlimit: 10
   },
   constant:{

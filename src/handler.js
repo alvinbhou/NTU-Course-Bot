@@ -29,54 +29,63 @@ const dbCourseQueryReply = function (sql, query_arr, context, action) {
 			if (row.CLNUM == config.constant.STRING.NOCLASSNUM) {
 				row.CLNUM = '無班次'
 			};
-			if(row.CTIME == -1){
+			if (row.CTIME == -1) {
 				row.CTIME = '無';
 			}
-			if(row.CPRO == -1){
+			if (row.CPRO == -1) {
 				row.CPRO = '?';
 			}
-			if(row.CDEPNAME ==  config.constant.STRING.NOCDEPNAME){
+			if (row.CDEPNAME == config.constant.STRING.NOCDEPNAME) {
 				row.CDEPNAME = row.CDEP;
 			}
 			console.log(row.CYEAR, row.CNAME, row.CLNUM, row.CPRO, row.CDEPNAME, row.CTYPE, row.AVGGPA);
 		}
 
-		/* template for small number of query result */
-		if (rows.length == 1) {
-			switch (context.platform) {
-				case config.constant.PLATFORM.MESSG:
-					let elements = template.course.messenger.single(rows);
-					context.sendGenericTemplate(elements, [], {
-							top_element_style: 'compact'
-						})
-						.catch((error) => {
-							console.log(error);
-						});
-					return;
-					break;
+		/* messenger */
+		if (context.platform == config.constant.PLATFORM.MESSG) {
+			if (rows.length == 1) {
+
+				let elements = template.course.messenger.single(rows);
+				context.sendGenericTemplate(elements, [], {
+						top_element_style: 'compact'
+					})
+					.catch((error) => {
+						console.log(error);
+					});
+
+
+			} else if (rows.length >= 2) {
+				let arr = [];
+				let chunk = 10;
+				for (let i = 0; i < rows.length && i < config.settings.cnumlimit.messenger; i += chunk) {
+					arr.push(rows.slice(i, i + chunk));
+				}
+				console.log(arr.length);
+				(async function () {
+					for(let i = 0; i < arr.length; ++i){
+						let elements = template.course.messenger.list(arr[i]);
+						await context.sendGenericTemplate(elements, [], {})
+							.catch((error) => {
+								console.log(error);
+							});
+						if(i+1 == config.settings.cnumlimit.messenger / chunk && arr[i].length == 10){
+							await context.sendText(`${emoji.whale} 達到上限，或許可以將搜尋範圍縮小 ${emoji.whale}`);
+						}
+					}
+				})()
+
 			}
-		} else if (rows.length <= 10 && rows.length >= 2) {
-			switch (context.platform) {
-				case config.constant.PLATFORM.MESSG:
-					let elements = template.course.messenger.list(rows);
-					context.sendGenericTemplate(elements, [], {
-							// top_element_style: 'compact'
-						})
-						.catch((error) => {
-							console.log(error);
-						});
-				return;
-				break;
-			}
+			return;
 		}
 
+		/* other platform */
 		async function iterateCourse() {
 			for (let i = 0; i < rows.length; ++i) {
 				let row = rows[i];
-				
+
 				/* sort as descending order or not */
 				let reply = "";
-				if (action.sort || i == Math.min(rows.length, config.settings.cnumlimit)) {
+				if (action.sort || i == Math.min(rows.length, config.settings.cnumlimit.telegram)) {
 					switch (context.platform) {
 						case config.constant.PLATFORM.TG:
 							reply = template.course.telegram(row);
@@ -88,11 +97,10 @@ const dbCourseQueryReply = function (sql, query_arr, context, action) {
 							reply = template.course.line(row);
 							await context.sendText(reply);
 							break;
-						case config.constant.PLATFORM.MESSG:
-							reply = template.course.messenger.multi(row);
-							await context.sendText(reply);
-							break;
-
+						// case config.constant.PLATFORM.MESSG:
+						// 	reply = template.course.messenger.multi(row);
+						// 	await context.sendText(reply);
+						// 	break;
 					}
 
 					/* prevent awaiting too long */
@@ -112,13 +120,13 @@ const dbCourseQueryReply = function (sql, query_arr, context, action) {
 							reply = template.course.line(row);
 							context.sendText(reply);
 							break;
-						case config.constant.PLATFORM.MESSG:
-							reply = template.course.messenger.multi(row);
-							context.sendText(reply);
-							break;
+						// case config.constant.PLATFORM.MESSG:
+						// 	reply = template.course.messenger.multi(row);
+						// 	context.sendText(reply);
+						// 	break;
 					}
 				}
-				if (i > config.settings.cnumlimit) {
+				if (i > config.settings.cnumlimit.telegram) {
 					reachLimitFlag = true;
 					break;
 					return;
@@ -136,7 +144,6 @@ const dbCourseQueryReply = function (sql, query_arr, context, action) {
 
 };
 const courseQuery = function (context, action) {
-
 	let query_target = action.course_type ? 'CNAME' : 'CUID';
 	let sql = `SELECT * FROM course
 					WHERE ${query_target} LIKE ? AND
@@ -145,7 +152,6 @@ const courseQuery = function (context, action) {
 					ORDER BY AVGGPA DESC`;
 	let query_array = [sqlCPrefix(action.argv[0]), action.course_year, action.course_gpa];
 	dbCourseQueryReply(sql, query_array, context, action);
-
 };
 
 const deptQuery = function (context, action) {
@@ -205,24 +211,23 @@ const deptQuery = function (context, action) {
 		});
 	}
 	/* 使用系所代號 */
-	else{
+	else {
 		let query_array = [action.course_year, action.dept_name.toUpperCase(), action.course_gpa];
 		dbCourseQueryReply(sql, query_array, context, action);
 	}
 }
 
-const tchrQuery = function(context, action){
+const tchrQuery = function (context, action) {
 	let sql = `SELECT * FROM course \n`;
 	sql += `WHERE CYEAR = ? AND \n `;
 	sql += `CPRO LIKE ? AND \n `;
 	sql += `AVGGPA >= ? `;
 	sql += `ORDER BY AVGGPA DESC`;
-	if(action.tchr_name.length == 0){
+	if (action.tchr_name.length == 0) {
 		context.sendText(`${emoji.blowfish} 找不到教師 ${emoji.blowfish}`);
 		return;
-	}
-	else{
-		let query_array = [action.course_year,sqlCPrefix(action.tchr_name), action.course_gpa];
+	} else {
+		let query_array = [action.course_year, sqlCPrefix(action.tchr_name), action.course_gpa];
 		dbCourseQueryReply(sql, query_array, context, action);
 	}
 }
@@ -249,8 +254,7 @@ const commandInfoReply = async function (code, context) {
 			let reply = template.command_info.dept.messenger;
 			await context.sendText(reply.message);
 		}
-	}
-	else if (code == command.commands_code.TEACHER) {
+	} else if (code == command.commands_code.TEACHER) {
 		if (context.platform == config.constant.PLATFORM.TG) {
 			let reply = template.command_info.teacher.telegram;
 			await context.sendMessage(reply.message, {
@@ -273,8 +277,7 @@ const handler = async context => {
 			let reply = template.help.messenger;
 			await context.sendText(reply.message);
 			await context.sendText(reply.quickreplyHeader, reply.quickreply).catch(console.error);
-		}
-		else if (payload == config.payload.QUERY_COURSE) {
+		} else if (payload == config.payload.QUERY_COURSE) {
 			let callback_data = config.constant.STRING[payload];
 			await context.sendText(callback_data);
 			commandInfoReply(command.commands_code.COURSE, context);
@@ -283,11 +286,11 @@ const handler = async context => {
 			await context.sendText(callback_data);
 			commandInfoReply(command.commands_code.DEPT, context);
 
-		}else if (payload == config.payload.QUERY_TCHR) {
+		} else if (payload == config.payload.QUERY_TCHR) {
 			let callback_data = config.constant.STRING[payload];
 			await context.sendText(callback_data);
 			commandInfoReply(command.commands_code.TEACHER, context);
-		} 
+		}
 		return;
 	}
 
@@ -299,9 +302,9 @@ const handler = async context => {
 				commandInfoReply(command.commands_code.COURSE, context);
 			} else if (payload == config.payload.QUERY_DEPT) {
 				commandInfoReply(command.commands_code.DEPT, context);
-			}else if (payload == config.payload.QUERY_TCHR) {
+			} else if (payload == config.payload.QUERY_TCHR) {
 				commandInfoReply(command.commands_code.TEACHER, context);
-			}else if (payload == config.payload.GITHUB_PAYLOAD) {
+			} else if (payload == config.payload.GITHUB_PAYLOAD) {
 				await context.sendText(config.github.url);
 			}
 		}
@@ -322,18 +325,16 @@ const handler = async context => {
 			await context.sendText(callback_data);
 			commandInfoReply(command.commands_code.DEPT, context);
 
-		}else if (payload == config.payload.QUERY_TCHR) {
+		} else if (payload == config.payload.QUERY_TCHR) {
 			let callback_data = config.constant.STRING[payload];
 			await context.sendText(callback_data);
 			commandInfoReply(command.commands_code.TEACHER, context);
-		} 
-		else if (payload in config.constant.EXAMPLES.COURSE) {
+		} else if (payload in config.constant.EXAMPLES.COURSE) {
 			let callback_data = config.constant.EXAMPLES.COURSE[payload];
 			await context.sendText(callback_data);
 			let action = parser.getAction(callback_data);
 			courseQuery(context, action);
-		}
-		else if(payload == config.payload.GITHUB_PAYLOAD){
+		} else if (payload == config.payload.GITHUB_PAYLOAD) {
 			let elements = template.more_info.messenger;
 			context.sendGenericTemplate(elements, [], {})
 				.catch((error) => {
@@ -355,7 +356,7 @@ const handler = async context => {
 		/* get started */
 		if (action.cmd == command.commands_code.START) {
 			let reply = {};
-			switch(context.platform){
+			switch (context.platform) {
 				case config.constant.PLATFORM.TG:
 					await context.sendText(template.start);
 					reply = template.help.telegram;
@@ -371,7 +372,7 @@ const handler = async context => {
 					await context.sendText(reply.quickreplyHeader, reply.quickreply).catch(console.error);
 					break;
 			}
-			
+
 		}
 		/* course command */
 		else if (action.cmd == command.commands_code.COURSE) {
@@ -391,8 +392,7 @@ const handler = async context => {
 			} else {
 				deptQuery(context, action);
 			}
-		}
-		else if(action.cmd == command.commands_code.TEACHER){
+		} else if (action.cmd == command.commands_code.TEACHER) {
 			if (!action.tchr_name.length) {
 				commandInfoReply(action.cmd, context);
 			} else {

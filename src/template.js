@@ -20,7 +20,7 @@ let help_messages = {
         `/c 機器學習 -g 3.5 -y 106-2\n\n` +
         `${emoji.whale} 附註\n` +
         `預設學期為 ${config.settings.cyear} \n` +
-        `搜尋回傳數目上限為20筆\n`,
+        `搜尋回傳數目上限為40筆\n`,
     dept: `${emoji.graduation_cap} 系所 \n` +
         `/d [科系] [甜度] [必/選修]\n` +
         `  -g [GPA] => GPA搜尋下限\n  -y [學期] => 指定學期\n\n` +
@@ -29,7 +29,7 @@ let help_messages = {
         `[範例]\n/d 電機 很甜 必修 -y 106-1\n/d IM 選修 不甜\n\n` +
         `${emoji.whale} 附註\n` +
         `預設學期為 ${config.settings.cyear} \n` +
-        `搜尋回傳數目上限為20\n` +
+        `搜尋回傳數目上限為40\n` +
         `隱藏專題研究課程` ,
     teacher:  `${emoji.palette} 教師\n` +
         `/t [教師名稱]\n` +
@@ -37,7 +37,7 @@ let help_messages = {
         `Ex: /t 孔令傑 -g 2.7\n\n` +
         `${emoji.whale} 附註\n` +
         `預設學期為 ${config.settings.cyear} \n` +
-        `搜尋回傳數目上限為20筆`
+        `搜尋回傳數目上限為40筆`
 }
 const markdownCode = (str) => {
     return ('```\n' + str + '```')
@@ -277,6 +277,9 @@ let command_info = {
         telegram: (() => {
             let reply = {};
             reply.message = help_messages.course;
+            let tglimit = config.settings.cnumlimit.telegram.toString();
+            let messglimit = config.settings.cnumlimit.messenger.toString();
+            reply.message = reply.message.replace(messglimit, tglimit);
             reply.message = markdownCode(reply.message);
             return reply;
         })(),

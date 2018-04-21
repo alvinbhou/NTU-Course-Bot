@@ -47,7 +47,7 @@ else{
   server.listen(port, () => {
     console.log(`server is listening on ${port} port...`);
     /* init messenger api settings */
-    messgapi.init();
+    // messgapi.init();
   });
 }
 
