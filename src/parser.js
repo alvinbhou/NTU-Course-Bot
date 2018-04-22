@@ -5,7 +5,7 @@ const ms = require('minimist-string');
 const getAction = function(text){
     // let messages = text.split(" ");
     const args = ms(text);
-    console.log(args);
+    console.log("text:", text, args);
     let action = {
         cmd: -1,
         name : 'undefined',

@@ -351,8 +351,8 @@ const handler = async context => {
 			return;
 		}
 		let action = parser.getAction(text);
-		await context.typing(200);
-		console.log(action);
+		await context.typing(300);
+		console.log(context.platform, action);
 		/* get started */
 		if (action.cmd == command.commands_code.START) {
 			let reply = {};
@@ -382,7 +382,6 @@ const handler = async context => {
 				commandInfoReply(action.cmd, context);
 			} else {
 				courseQuery(context, action);
-
 			}
 		}
 		/* department command */
