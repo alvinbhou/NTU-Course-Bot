@@ -14,22 +14,22 @@ let help_messages = {
         `/t [教師名稱]\n\n` +
         ` {參數} \n` +
         `  -g [GPA] => GPA下限\n  -y [學期] => 指定學期\n`,
-    course:  `${emoji.red_notebook} 課程查詢 \n/c [課程名稱] 或 /c [課程識別碼]\n` +
-        `  -g [GPA] => GPA搜尋下限\n  -y [學期] => 指定學期\n  -s       => 照GPA排序\n\n` +
+    course: `${emoji.red_notebook} 課程查詢 \n/c [課程名稱] 或 /c [課程識別碼]\n` +
+        `  -g [GPA] => GPA搜尋下限\n  -y [學期] => 指定學期\n\n` +
         `Ex: 106-2 平均GPA>3.5的 機器學習\n\n` +
         `/c 機器學習 -g 3.5 -y 106-2\n\n` +
         `${emoji.whale} 附註\n` +
         `預設學期為 ${config.settings.cyear} \n` +
-        `搜尋回傳數目上限為40筆\n`,
+        `搜尋回傳數目上限為40筆，按GPA排序`,
     dept: `${emoji.graduation_cap} 系所 \n` +
         `/d [科系] [甜度] [必/選修]\n` +
         `  -g [GPA] => GPA搜尋下限\n  -y [學期] => 指定學期\n\n` +
         `[甜度]\n很甜: GPA >= 4\n甜:GPA >= 3.7\n不甜：GPA <= 3.2\n\n` +
-        `[科系]\n 可使用中文或代號，例如電機 or EE\n\n` +
-        `[範例]\n/d 電機 很甜 必修 -y 106-1\n/d IM 選修 不甜\n\n` +
+        `[科系]\n 可使用中英文或代號，例如電機 or EE or 9010\n\n` +
+        `[範例]\n/d 資管 選修 很甜 -y 106-1\n/d IM 選修 不甜\n/d 7050 選修 -g 3.5\n\n` +
         `${emoji.whale} 附註\n` +
         `預設學期為 ${config.settings.cyear} \n` +
-        `搜尋回傳數目上限為40\n` +
+        `搜尋回傳數目上限為40筆，按GPA排序\n` +
         `隱藏專題研究課程` ,
     teacher:  `${emoji.palette} 教師\n` +
         `/t [教師名稱]\n` +
@@ -37,7 +37,7 @@ let help_messages = {
         `Ex: /t 孔令傑 -g 2.7\n\n` +
         `${emoji.whale} 附註\n` +
         `預設學期為 ${config.settings.cyear} \n` +
-        `搜尋回傳數目上限為40筆`
+        `搜尋回傳數目上限為40筆，按GPA排序`
 }
 const markdownCode = (str) => {
     return ('```\n' + str + '```')
@@ -83,7 +83,7 @@ let courseAttrs = {
             ['時間', course.CTIME ],
             ['等第', course.accGPA],
             ['系所', course.CDEPNAME],
-            ['班次', course.CLNUM]
+            ['加選', course.CAPPLY]
         ];
         return courseObj;
     },
@@ -99,7 +99,7 @@ let courseAttrs = {
             ['平均', course.AVGGPA >= 0 ? course.AVGGPA : "無資料"],
             ['學分', course.CREDIT],
             ['修課', course.CTYPE],
-            ['人數', course.CLIMIT],
+            ['加選', course.CAPPLY]
         ];
         return courseObj;
     }

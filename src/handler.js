@@ -181,15 +181,24 @@ const deptQuery = function (context, action) {
 	}
 
 	/* 使用中文系所名稱 */
-	if (action.dept_type) {
+	if (action.dept_type > 0) {
 		if (action.dept_name.length >= 15) {
 			context.sendText("系所名稱過長！");
 			return;
 		}
 		let dsql = `SELECT * FROM department \nWHERE `;
-		/* dept name */
-		dsql += `DNAME LIKE ? `;
-		db.all(dsql, sqlCPrefix(action.dept_name), (err, rows) => {
+		/* dept name or use dept_num*/
+		let query_arr = [];
+		if(action.dept_type == 1){
+			dsql += `(DNAME LIKE ?  OR DABBR LIKE ? OR DABBR LIKE ?)`;
+			query_arr = [sqlCPrefix(action.dept_name), sqlCPrefix(action.dept_name),sqlCPrefix(action.dept_name2)];
+		}
+		else{
+			dsql += `DNUM = ?`;
+			query_arr = [action.dept_name];
+		}
+
+		db.all(dsql, query_arr, (err, rows) => {
 			console.log(rows);
 			(async function () {
 				if (rows.length == 0) {
@@ -351,7 +360,7 @@ const handler = async context => {
 			return;
 		}
 		let action = parser.getAction(text);
-		await context.typing(300);
+		context.typing(500);
 		console.log(context.platform, action);
 		/* get started */
 		if (action.cmd == command.commands_code.START) {
@@ -386,7 +395,7 @@ const handler = async context => {
 		}
 		/* department command */
 		else if (action.cmd == command.commands_code.DEPT) {
-			if (!action.dept_name.length) {
+			if (action.dept_name.length == 0) {
 				commandInfoReply(action.cmd, context);
 			} else {
 				deptQuery(context, action);

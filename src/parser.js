@@ -4,7 +4,7 @@ const ms = require('minimist-string');
 
 const getAction = function(text){
     // let messages = text.split(" ");
-    const args = ms(text);
+    let args = ms(text);
     console.log("text:", text, args);
     let action = {
         cmd: -1,
@@ -70,13 +70,22 @@ const getAction = function(text){
         action.dept_name = "";
         for(let i = 0; i < args._.length; ++i){
             if(i == 0) continue;
-            if(i == 1) action.dept_name = args._[i];
+            if(i == 1) action.dept_name = args._[i].toString();
             else{
-                action.argv.push(args._[i]);
+                action.argv.push(args._[i].toString());
             }
         }
+        action.dept_name2 = action.dept_name.replace('所', '系');
         let regex = /^[A-Za-z0-9 ]+$/;
         action.dept_type = regex.test(action.dept_name) ? 0 : 1; 
+        let en_num_regex = /^[A-Za-z0-9]+$/;
+        if(action.dept_name.length == 4 && en_num_regex.test(action.dept_name)){
+            let num_reg = /^\d+$/;
+            if(num_reg.test(action.dept_name.slice(1,action.dept_name.length-1))){
+                action.dept_type = 2;
+            }
+        }
+        
         /* GPA Constraint: 1 -> above,  0 -> below*/
         action.gpa_above = 1;
         for(let i = 0; i < action.argv.length; ++i){
@@ -142,8 +151,6 @@ const getAction = function(text){
          action.course_gpa = args.g ? args.g : -99;
         
     }
-    
-
     return action;
 }
 
