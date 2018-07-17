@@ -1,14 +1,16 @@
 {
   "dependencies": {
     "body-parser": "^1.18.2",
-    "bottender": "latest",
+    "bottender": "^0.14.34",
+    "csvtojson": "^2.0.6",
     "express": "^4.16.0",
     "minimist-string": "^1.0.2",
     "request": "^2.85.0",
     "sqlite3": "^4.0.0"
   },
   "devDependencies": {
-    "nodemon": "^1.11.0"
+    "nodemon": "^1.11.0",
+    "hoek": "^5.0.3"
   },
   "scripts": {
     "dev": "nodemon index.js",

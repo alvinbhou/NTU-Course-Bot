@@ -339,7 +339,7 @@ const more_info = {
     messenger: [{
         title: "NTU Course Bot",
         image_url: config.github.img,
-        subtitle: '不同平台說明和documentation',
+        subtitle: '不同平台說明和docs',
         default_action: {
             type: 'web_url',
             url: config.github.url,

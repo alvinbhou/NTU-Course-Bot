@@ -12,6 +12,7 @@ const sqlCPrefix = (str) => {
 
 const dbCourseQueryReply = function (sql, query_arr, context, action) {
 	let reachLimitFlag = false;
+	console.log(sql, query_arr);
 	db.all(sql, query_arr, (err, rows) => {
 		if (err) {
 			throw err;
@@ -38,7 +39,7 @@ const dbCourseQueryReply = function (sql, query_arr, context, action) {
 			if (row.CDEPNAME == config.constant.STRING.NOCDEPNAME) {
 				row.CDEPNAME = row.CDEP;
 			}
-			console.log(row.CYEAR, row.CNAME, row.CLNUM, row.CPRO, row.CDEPNAME, row.CTYPE, row.AVGGPA);
+			// console.log(row.CYEAR, row.CNAME, row.CLNUM, row.CPRO, row.CDEPNAME, row.CTYPE, row.AVGGPA);
 		}
 
 		/* messenger */
@@ -213,7 +214,7 @@ const deptQuery = function (context, action) {
 				}
 				/* query course! */
 				else if (rows.length == 1) {
-					let query_array = [action.course_year, rows[0].DUID, action.course_gpa];
+					let query_array = [action.course_year, rows[0].DUID.toUpperCase(), action.course_gpa];
 					dbCourseQueryReply(sql, query_array, context, action);
 				}
 			})()
@@ -341,7 +342,7 @@ const handler = async context => {
 		} else if (payload in config.constant.EXAMPLES.COURSE) {
 			let callback_data = config.constant.EXAMPLES.COURSE[payload];
 			await context.sendText(callback_data);
-			let action = parser.getAction(callback_data);
+			let action = await parser.getAction(callback_data);
 			courseQuery(context, action);
 		} else if (payload == config.payload.GITHUB_PAYLOAD) {
 			let elements = template.more_info.messenger;
@@ -359,7 +360,7 @@ const handler = async context => {
 		if (config.whitelist.indexOf(text) > 0) {
 			return;
 		}
-		let action = parser.getAction(text);
+		let action = await parser.getAction(text);
 		context.typing(500);
 		console.log(context.platform, action);
 		/* get started */
