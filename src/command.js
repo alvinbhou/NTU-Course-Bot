@@ -20,7 +20,7 @@ const commands_list = [
     },
     {
         name: 'teacher',
-        alias: ['/t', '/teacher'],
+        alias: ['/t', '/teacher', '師'],
         code: 3
     },
     {

@@ -61,6 +61,11 @@ var persistentMenuOptions = {
         "composer_input_disabled":false,
         "call_to_actions":[
           {
+            "title":"幫助",
+            "type":"postback",
+            "payload": config.payload.QUERY_HELP
+          },
+          {
             "title":"課程查詢",
             "type":"postback",
             "payload": config.payload.QUERY_COURSE
@@ -70,11 +75,7 @@ var persistentMenuOptions = {
             "type":"postback",
             "payload": config.payload.QUERY_DEPT
           },
-          {
-            "title":"教師查詢",
-            "type":"postback",
-            "payload": config.payload.QUERY_TCHR
-          },
+          
           
           
         ]

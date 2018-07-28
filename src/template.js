@@ -6,35 +6,40 @@ let undefined_reply = `抱歉，無法理解 ${emoji.sauropod}`;
 let start = `歡迎使用NTU Course Bot ${emoji.rabbit} \n可以使用 /h 或 /help 查看相關功能`;
 let help_messages = {
     main: `${emoji.lightbulb} 幫助 \n` +
-        `/h 或 /help 顯示說明文件\n\n` +
-        `${emoji.red_notebook} 課程查詢 \n/c [課程名稱] 或 /c [課程識別碼]\n\n` +
+        `help 或 /help 顯示說明文件\n\n` +
+        `${emoji.red_notebook} 課程查詢 \n輸入課名或課程識別碼\n※範例\n  『機器學習』\n  『725 M2410』\n\n` +
         `${emoji.graduation_cap} 系所\n` +
-        `/d [科系] [甜度] [必/選修]\n\n` +
+        `輸入系所名稱/代號，選/必修，以及甜度(以空格隔開)\n※範例\n  『電機工程學系 必修』\n  『電機系 選修 很甜』\n  『IM 必帶 不甜』\n  『7050 選修 甜』\n\n` +
         `${emoji.palette} 教師\n` +
-        `/t [教師名稱]\n\n` +
-        ` {參數} \n` +
-        `  -g [GPA] => GPA下限\n  -y [學期] => 指定學期\n`,
-    course: `${emoji.red_notebook} 課程查詢 \n/c [課程名稱] 或 /c [課程識別碼]\n` +
+        `輸入『師』+ 教師名稱\n` +
+        `※範例\n  『師 孔令傑』\n\n` ,
+    course: `${emoji.red_notebook} 課程查詢 \n` +
+        `⊕基本操作\n輸入課名或課程識別碼\n※範例\n  『機器學習』\n  『725 M2410』\n\n`+
+        `⊕進階操作\n/c [課程名稱] 或 /c [課程識別碼] 配上參數\n` +
         `  -g [GPA] => GPA搜尋下限\n  -y [學期] => 指定學期\n\n` +
-        `Ex: 106-2 平均GPA>3.5的 機器學習\n\n` +
+        `※範例： 106-2 平均GPA>3.5的 機器學習\n\n` +
         `/c 機器學習 -g 3.5 -y 106-2\n\n` +
         `${emoji.whale} 附註\n` +
+        `點擊卡片可打開台大課程網資訊\n`+
         `預設學期為 ${config.settings.cyear} \n` +
         `搜尋回傳數目上限為40筆，按GPA排序`,
     dept: `${emoji.graduation_cap} 系所 \n` +
-        `/d [科系] [甜度] [必/選修]\n` +
+        `⊕基本操作\n輸入系所名稱/代號，選/必修，以及甜度(以空格隔開)\n※範例\n  『電機工程學系 必修』\n  『電機系 選修 很甜』\n  『IM 必帶 不甜』\n  『7050 選修 甜』\n\n`+
+        `⊕進階操作\n/d [科系] [甜度] [必/選修] 配上參數\n` +
         `  -g [GPA] => GPA搜尋下限\n  -y [學期] => 指定學期\n\n` +
+        `※範例\n  『/d 資管系 選修 很甜 -y 106-1』\n  『/d 7050 選修 -g 3.5』\n\n` +
         `[甜度]\n很甜: GPA >= 4\n甜:GPA >= 3.7\n不甜：GPA <= 3.2\n\n` +
-        `[科系]\n 可使用中英文或代號，例如電機 or EE or 9010\n\n` +
-        `[範例]\n/d 資管 選修 很甜 -y 106-1\n/d IM 選修 不甜\n/d 7050 選修 -g 3.5\n\n` +
+        `[科系]\n 可使用中英文或代號，例如電機系 or EE or 9010\n\n` +
         `${emoji.whale} 附註\n` +
         `預設學期為 ${config.settings.cyear} \n` +
         `搜尋回傳數目上限為40筆，按GPA排序\n` +
         `隱藏專題研究課程` ,
     teacher:  `${emoji.palette} 教師\n` +
-        `/t [教師名稱]\n` +
+        `⊕基本操作\n輸入『師』+ 教師名稱\n` +
+        `※範例\n  『師 孔令傑』\n\n` +
+        `⊕進階操作\n師 [教師名稱] 配上參數\n` +
         `  -g [GPA] => GPA搜尋下限\n  -y [學期] => 指定學期\n\n` +
-        `Ex: /t 孔令傑 -g 2.7\n\n` +
+        `※範例\n  『師 孔令傑 -g 2.7』\n\n` +
         `${emoji.whale} 附註\n` +
         `預設學期為 ${config.settings.cyear} \n` +
         `搜尋回傳數目上限為40筆，按GPA排序`
@@ -230,14 +235,14 @@ let help = {
                 ],
             },
         }
-        reply.inlineHeader = `以下為不同指令的詳細說明，可點擊參考`;
+        reply.inlineHeader = `以下為不同指令的進階說明，可點擊參考`;
         reply.inline = inline_keyboard;
         return reply;
     })(),
     messenger: (() => {
         let reply = {};
         reply.message = help_messages.main;
-        reply.quickreplyHeader = `以下為不同指令的詳細說明，可點擊參考`;
+        reply.quickreplyHeader = `以下為不同指令的進階說明，可點擊參考`;
         reply.quickreply = {
             quick_replies: [{
                     content_type: 'text',

@@ -52,6 +52,7 @@ const getAction = async function (text) {
         action.course_type = (regex.test(course) && course.length == 9 && /\d/.test(course[course.length - 1])) ? 0 : 1;
         return action;
     }
+
     /* DEPARTMENT COMMAND */
     else if (action.cmd == command.commands_code.DEPT) {
         /* year argument */
@@ -123,6 +124,12 @@ const getAction = async function (text) {
         action.course_gpa = args.g ? args.g : -99;
         return action;
     }
+
+    /* HELP COMMAND */
+    else if(action.cmd == command.commands_code.HELP){
+        return action;
+    }
+
     /* psuedo-nlp */
     else {
         const depts = await csv().fromFile('data/departments.csv');
@@ -130,29 +137,31 @@ const getAction = async function (text) {
         let texts = args._;
         let DNUM = null;
         for(let i = 0; i < texts.length; ++i){
-            texts[i] = texts[i].replace('所', '系');
+            texts[i] = texts[i].toString().replace('所', '系').toUpperCase();
             for(let j = 0; j < depts.length; ++j){
-                if(texts[i] == depts[j].DUID || texts[i] == depts[j].DNAME || texts[i] == depts[j].DABBR){
+                if(texts[i] == depts[j].DUID || texts[i] == depts[j].DNAME || texts[i] == depts[j].DABBR || texts[i] == depts[j].DNUM){
                     DNUM = depts[j].DNUM;
                     break;
                 }
             }
         }
-        /* found matching department, department command */
+        /* found matching course or department command */
         if(DNUM){
             action.cmd = command.commands_code.DEPT;
             action.dept_name = DNUM;
             action.dept_type = 2;
             action.course_year = config.settings.cyear;
-            action.course_gpa = 0;
+            action.course_gpa = -99;
             action = parseCourseOptions(action, texts);
         }
         else{
+            let regex = /^[A-Za-z0-9 ]+$/;
+            let course = texts.join(" ");
             action.cmd = command.commands_code.COURSE;
-            action.argv.push(texts[0]);
+            action.argv.push(course);
             action.course_year = config.settings.cyear;
-            action.course_gpa = 0;
-            action.course_type = 1;
+            action.course_gpa = -99;
+            action.course_type = (regex.test(course) && course.length == 9 && /\d/.test(course[course.length - 1])) ? 0 : 1;
         }
         return action;
     }

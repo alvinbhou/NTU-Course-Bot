@@ -45,6 +45,7 @@ module.exports = {
     QUERY_COURSE: 'QUERY_COURSE',
     QUERY_DEPT: 'QUERY_DEPT',
     QUERY_TCHR: 'QUERY_TCHR',
+    QUERY_HELP: 'QUERY_HELP',
     GITHUB_PAYLOAD: 'GITHUB_PAYLOAD'
   },
   whitelist: ['課程', '系所', '教師'],

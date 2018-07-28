@@ -282,12 +282,18 @@ const handler = async context => {
 	if (context.event.isPostback) {
 		console.log(context.event.payload);
 		let payload = context.event.payload;
-		if (context.event.payload == config.payload.GET_STARTED) {
+		if (payload == config.payload.GET_STARTED) {
 			await context.sendText(template.start);
 			let reply = template.help.messenger;
 			await context.sendText(reply.message);
 			await context.sendText(reply.quickreplyHeader, reply.quickreply).catch(console.error);
-		} else if (payload == config.payload.QUERY_COURSE) {
+		}
+		else if (payload == config.payload.QUERY_HELP) {
+			let reply = template.help.messenger;
+			await context.sendText(reply.message);
+			await context.sendText(reply.quickreplyHeader, reply.quickreply).catch(console.error);
+		}		
+		else if (payload == config.payload.QUERY_COURSE) {
 			let callback_data = config.constant.STRING[payload];
 			await context.sendText(callback_data);
 			commandInfoReply(command.commands_code.COURSE, context);
