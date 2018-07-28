@@ -1,75 +1,75 @@
 DUID,DNAME,DNAMEEN,DABBR,DNUM
 PE,體育,Physical Education,體育,%NODNUM%
-MilTr,軍訓,Military Training,軍訓,%NODNUM%
-AdvEng,進階英語,Online English Program,進階英語,%NODNUM%
+MILTR,軍訓,Military Training,軍訓,%NODNUM%
+ADVENG,進階英語,Online English Program,進階英語,%NODNUM%
 CHIN,中國文學系,Department of Chinese Literature,中文系,1010
 FL,外國語文學系,Department of Foreign Languages and Literatures,外文系,1020
-Hist,歷史學系,Department of History,歷史系,1030
-Phl,哲學系,Department of Philosophy,哲學系,1040
-Anth,人類學系,Department of Anthropology,人類系,1050
+HIST,歷史學系,Department of History,歷史系,1030
+PHL,哲學系,Department of Philosophy,哲學系,1040
+ANTH,人類學系,Department of Anthropology,人類系,1050
 LIS,圖書資訊學系,Department of Library and Information Science,圖資系,1060
-JpnL,日本語文學系,Department of Japanese Language and Literature,日文系,1070
-Thea,戲劇學系,Department of Drama and Theatre,戲劇系,1090
+JPNL,日本語文學系,Department of Japanese Language and Literature,日文系,1070
+THEA,戲劇學系,Department of Drama and Theatre,戲劇系,1090
 ARHY,藝術史研究所,Graduate Institute of Art History,藝術所,1410
 LING,語言學研究所,Graduate Institute of Linguistics,語言所,1420
-Music,音樂學研究所,Graduate Institute of Musicology,音樂所,1440
-TwLit,臺灣文學研究所,Graduate Institute of Taiwan Literature,臺文所,1450
+MUSIC,音樂學研究所,Graduate Institute of Musicology,音樂所,1440
+TWLIT,臺灣文學研究所,Graduate Institute of Taiwan Literature,臺文所,1450
 MATH,數學系,Department of Mathematics,數學系,2010
-Phys,物理學系,Department of Physics,物理系,2020
-Chem,化學系,Department of Chemistry,化學系,2030
-Geo,地質科學系,Department of Geosciences,地質系,2040
-Psy,心理學系,Department of Psychology,心理系,2070
-Geog,地理環境資源學系,Department of Geography,地理系,2080
-AtmSci,大氣科學系,Department of Atmospheric Sciences,大氣系,2090
-Ocean,海洋研究所,Graduate Institute of Oceanography,海洋所,2410
-AsPhys,天文物理研究所,Graduate Institute of Astrophysics,天文所,2440
-ApPhys,應用物理學研究所,Graduate Institute of Applied Physics,應物所,2450
+PHYS,物理學系,Department of Physics,物理系,2020
+CHEM,化學系,Department of Chemistry,化學系,2030
+GEO,地質科學系,Department of Geosciences,地質系,2040
+PSY,心理學系,Department of Psychology,心理系,2070
+GEOG,地理環境資源學系,Department of Geography,地理系,2080
+ATMSCI,大氣科學系,Department of Atmospheric Sciences,大氣系,2090
+OCEAN,海洋研究所,Graduate Institute of Oceanography,海洋所,2410
+ASPHYS,天文物理研究所,Graduate Institute of Astrophysics,天文所,2440
+APPHYS,應用物理學研究所,Graduate Institute of Applied Physics,應物所,2450
 PS,政治學系,Department of Political Science,政治系,3020
 ECON,經濟學系,Department of Economics,經濟系,3030
-Soc,社會學系,Department of Sociology,社會系,3050
+SOC,社會學系,Department of Sociology,社會系,3050
 SW,社會工作學系,Department of Social Work,社工系,3100
-NtlDev,國家發展研究所,Graduate Institute of National Development,國發所,3410
+NTLDEV,國家發展研究所,Graduate Institute of National Development,國發所,3410
 JOUR,新聞研究所,Graduate Institute of Journalism,新聞所,3420
-Med,醫學系,Department of Medicine,醫學系,4010
-Dent,牙醫學系,Department of Dentistry,牙醫系,4020
+MED,醫學系,Department of Medicine,醫學系,4010
+DENT,牙醫學系,Department of Dentistry,牙醫系,4020
 PHARM,藥學系,Department of Pharmacy,藥學系,4030
-CliLab,醫學檢驗暨生物技術學系,Department of Clinical Laboratory Sciences and Medical Biotechnology,醫技系,%NODNUM%
+CLILAB,醫學檢驗暨生物技術學系,Department of Clinical Laboratory Sciences and Medical Biotechnology,醫技系,%NODNUM%
 NURSE,護理學系,Department of Nursing,護理系,4060
 PT,物理治療學系,Department of Physical Therapy,物治系,%NODNUM%
 OT,職能治療學系,Department of Occupational Therapy,職治系,4090
-ClinMD,臨床醫學研究所,Graduate Institute of Clinical Medicine,臨醫所,4210
-CDent,臨床牙醫學研究所,Graduate Institute of Clinical Dentistry,臨牙所,4220
-Physio,生理學研究所,Graduate Institute of Physiology,生理所,4410
-BioMol,生物化學暨分子生物學研究所,Graduate Institute of Biochemistry & Molecular Biology,生化所,4420
-Phmco,藥理學研究所,Graduate Institute of Pharmacology,藥理所,4430
-Pathol,病理學研究所,Graduate Institute of Pathology,病理所,4440
-Microb,微生物學研究所,Graduate Institute of Microbiology,微生所,4450
-Anat,解剖學暨細胞生物學研究所,Graduate Institute of Anatomy & Cell Biology,解剖所,4460
-Tox,毒理學研究所,Graduate Institute of Toxicology,毒理所,4470
-MolMed,分子醫學研究所,Graduate Institute of Molecular Medicine,分子所,4480
-Immuno,免疫學研究所,Graduate Institute of Immunology,免疫所,4490
-OraBio,口腔生物科學研究所,Graduate Institute of Oral Biology,口腔所,4500
-CliPhm,臨床藥學研究所,Graduate Institute of Clinical Pharmacy,臨床所,4510
-ForMed,法醫學研究所,Graduate Institute of Forensic Medicine,法醫所,4520
-Onco,腫瘤醫學研究所,Graduate Institute of Oncology,腫瘤所,4530
-Genom,臨床基因醫學研究所,Graduate Institute of Clinical Genomics,臨床基因所,%NODNUM%
+CLINMD,臨床醫學研究所,Graduate Institute of Clinical Medicine,臨醫所,4210
+CDENT,臨床牙醫學研究所,Graduate Institute of Clinical Dentistry,臨牙所,4220
+PHYSIO,生理學研究所,Graduate Institute of Physiology,生理所,4410
+BIOMOL,生物化學暨分子生物學研究所,Graduate Institute of Biochemistry & Molecular Biology,生化所,4420
+PHMCO,藥理學研究所,Graduate Institute of Pharmacology,藥理所,4430
+PATHOL,病理學研究所,Graduate Institute of Pathology,病理所,4440
+MICROB,微生物學研究所,Graduate Institute of Microbiology,微生所,4450
+ANAT,解剖學暨細胞生物學研究所,Graduate Institute of Anatomy & Cell Biology,解剖所,4460
+TOX,毒理學研究所,Graduate Institute of Toxicology,毒理所,4470
+MOLMED,分子醫學研究所,Graduate Institute of Molecular Medicine,分子所,4480
+IMMUNO,免疫學研究所,Graduate Institute of Immunology,免疫所,4490
+ORABIO,口腔生物科學研究所,Graduate Institute of Oral Biology,口腔所,4500
+CLIPHM,臨床藥學研究所,Graduate Institute of Clinical Pharmacy,臨床所,4510
+FORMED,法醫學研究所,Graduate Institute of Forensic Medicine,法醫所,4520
+ONCO,腫瘤醫學研究所,Graduate Institute of Oncology,腫瘤所,4530
+GENOM,臨床基因醫學研究所,Graduate Institute of Clinical Genomics,臨床基因所,%NODNUM%
 PTMP,轉譯醫學博士學位學程,Doctor of Philosophy of Translational Medicine Degree Program,轉譯所,4560
 CIE,土木工程學系,Department of Civil Engineering,土木系,5010
 ME,機械工程學系,Department of Mechanical Engineering,機械系,5020
-ChemE,化學工程學系,Department of Chemical Engineering,化工系,5040
+CHEME,化學工程學系,Department of Chemical Engineering,化工系,5040
 ESOE,工程科學及海洋工程學系,Department of Engineering Science and Ocean Engineering,工海系,5050
 MSE,材料科學與工程學系,Department of Materials Science and Engineering,材料系,5070
-EnvE,環境工程學研究所,Graduate Institute of Environmental Engineering,環工所,5410
+ENVE,環境工程學研究所,Graduate Institute of Environmental Engineering,環工所,5410
 AM,應用力學研究所,Graduate Institute of Applied Mechanics,應力所,5430
 BP,建築與城鄉研究所,Graduate Institute of Building and Planning,城鄉所,5440
 IE,工業工程學研究所,Graduate Institute of Industrial Engineering,工工所,5460
-Biomed,醫學工程學研究所,Graduate Institute of Biomedical Engineering,醫工所,5480
+BIOMED,醫學工程學研究所,Graduate Institute of Biomedical Engineering,醫工所,5480
 PSE,高分子科學與工程學研究所,Graduate Institute of Polymer Science and Engineering,高分子所,5490
-Agron,農藝學系,Department of Agronomy,農藝系,6010
+AGRON,農藝學系,Department of Agronomy,農藝系,6010
 BSE,生物環境系統工程學系,Department of Bioenvironmental Systems Engineering,生工系,6020
 AC,農業化學系,Department of Agricultural Chemistry,農化系,6030
-Forest,森林環境暨資源學系,Department of Forestry and Resource Conservation,森林系,6050
-AniSci,動物科學技術學系,Department of Animal Science and Technology,動科系,6060
+FOREST,森林環境暨資源學系,Department of Forestry and Resource Conservation,森林系,6050
+ANISCI,動物科學技術學系,Department of Animal Science and Technology,動科系,6060
 AGEC,農業經濟學系,Department of Agricultural Economics,農經系,6070
 HORT,園藝學系,Department of Horticultural Science,園藝系,%NODNUM%
 VM,獸醫學系,Department of Veterinary Medicine,獸醫系,6090
@@ -78,11 +78,11 @@ BME,生物產業機電工程學系,Department of Bio-industrial Mechatronics Eng
 ENT,昆蟲學系,Department of Entomology,昆蟲系,6120
 PPM,植物病理與微生物學系,Department of Plant Pathology and Microbiology,植微系,6130
 FOOD,食品科技研究所,Graduate Institute of Food Science and Technology,食科所,6410
-Biot,生物科技研究所,Graduate Institute of Biotechnology,生科所,6420
+BIOT,生物科技研究所,Graduate Institute of Biotechnology,生科所,6420
 VCS,臨床動物醫學研究所,Graduate Institute of Veterinary Clinical Sciences,臨床動物所,6430
 BA,工商管理學系,Department of Business Administration,工管系,7010
-Acc,會計學系,Department of Accounting,會計系,7020
-Fin,財務金融學系,Department of Finance,財金系,7030
+ACC,會計學系,Department of Accounting,會計系,7020
+FIN,財務金融學系,Department of Finance,財金系,7030
 IB,國際企業學系,Department of International Business,國企系,7040
 IM,資訊管理學系,Department of Information Management,資管系,7050
 EMBA,高階管理碩士專班(EMBA),The Executive MBA Program in Business Administration,EMBA管理碩士專班,7400
@@ -103,25 +103,25 @@ EPM,流行病學與預防醫學研究所,Graduate Institute of Epidemiology and 
 EE,電機工程學系,Department of Electrical Engineering,電機系,9010
 CSIE,資訊工程學系,Department of Computer Science and Information Engineering,資工系,9020
 OE,光電工程學研究所,Graduate Institute of Photonics and Optoelectronics,光電所,9410
-CommE,電信工程學研究所,Graduate Institute of Communication Engineering,電信所,9420
+COMME,電信工程學研究所,Graduate Institute of Communication Engineering,電信所,9420
 EEE,電子工程學研究所,Graduate Institute of Electronics Engineering,電子所,9430
 NM,資訊網路與多媒體研究所,Graduate Institute of Networking and Multimedia,網媒所,9440
 BEBI,生醫電子與資訊學研究所,Graduate Institute of Biomedical Electronics and Bioinformatics,生醫電資所,9450
 LAW,法律學系,Department of Law,法律系,A010
-LawILS,科際整合法律學研究所,Graduate Institute of Interdisciplinary Legal Studies,科法所,A410
+LAWILS,科際整合法律學研究所,Graduate Institute of Interdisciplinary Legal Studies,科法所,A410
 LS,生命科學系,Department of Life Science,生科系,B010
 BST,生化科技學系,Department of Biochemical Science and Technology,生化系,B020
-ZOOl,動物學研究所,Graduate Institute of Zoology,動物所,2250
-PlBio,植物科學研究所,Graduate Institute of Plant Biology,植科所,B420
+ZOOL,動物學研究所,Graduate Institute of Zoology,動物所,2250
+PLBIO,植物科學研究所,Graduate Institute of Plant Biology,植科所,B420
 MCB,分子與細胞生物學研究所,Graduate Institute of Molecular and Cellular Biology,分細所,B430
 EEB,生態學與演化生物學研究所,Graduate Institute of Ecology and Evolutionary Biology,生演所,B440
-FishSc,漁業科學研究所,Graduate Institute of Fisheries Science,漁科所,B450
-BChem,生化科學研究所,Graduate Institute of Biochemical Sciences,生化科學所,B460
+FISHSC,漁業科學研究所,Graduate Institute of Fisheries Science,漁科所,B450
+BCHEM,生化科學研究所,Graduate Institute of Biochemical Sciences,生化科學所,B460
 MBC,微生物與生化學研究所,Graduate Institute of Microbiology and Biochemistry,微生物與生化學研究所,B470
-GenSys,基因體與系統生物學學位學程,Genome and Systems Biology Degree Program,基因體與系統生物學學位學程,B480
-Distan,遠距教學課程,Distance Education,遠距課程,%NODNUM%
-GenEdu,共同教育通識組,General Education,通識,%NODNUM%
-LibEdu,共教中心共教組,Liberal Education,共教,%NODNUM%
-EduTch,中等學校教育學程,Center for Teacher Education,中等學校教育學程,%NODNUM%
-Prog,各學分學程,Interdisciplinary Program,學分學程,%NODNUM%
-Write,寫作教學中心,Academic Writing Education Center,寫作教學,Q010
+GENSYS,基因體與系統生物學學位學程,Genome and Systems Biology Degree Program,基因體與系統生物學學位學程,B480
+DISTAN,遠距教學課程,Distance Education,遠距課程,%NODNUM%
+GENEDU,共同教育通識組,General Education,通識,%NODNUM%
+LIBEDU,共教中心共教組,Liberal Education,共教,%NODNUM%
+EDUTCH,中等學校教育學程,Center for Teacher Education,中等學校教育學程,%NODNUM%
+PROG,各學分學程,Interdisciplinary Program,學分學程,%NODNUM%
+WRITE,寫作教學中心,Academic Writing Education Center,寫作教學,Q010
