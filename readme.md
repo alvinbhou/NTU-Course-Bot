@@ -2,12 +2,14 @@
 
 台大課程機器人，可查甜課資訊，不同系所和教授課程
 
-NTU Course Bot that gives course information based on GPA, departments and more.
-
 > 想修財務管理，不知道哪個班最甜？
 > 大CS時代想電資選修，但又怕GPA太低？
 
 透過 NTU Course Bot 查詢課程，課程按照GPA排序並連結台大課程網，也提供查詢不同系所的課程
+
+NTU Course Bot gives course information based on GPA, departments and more.
+
+You can set your desired grade average for courses, and find the best courses in each department. Search through courses for a specifc professor. Futhermore, you can connect to the official course information site with just a click.
 
 ## Chat with the bot
 ### Messenger
@@ -15,6 +17,9 @@ https://m.me/ntucoursebot
 
 ### Telegram
 https://t.me/ntucoursebot
+
+### Line
+https://line.me/R/ti/p/neIdhdWSlX
 
 ## Demo Video
 <div align="center">
@@ -28,7 +33,7 @@ https://t.me/ntucoursebot
 help 或 /help 顯示說明文件
 ```
 
-### 課程查詢
+### 課程查詢 (course)
 ```
 📕 課程查詢 
 ⊕基本操作
@@ -51,7 +56,7 @@ help 或 /help 顯示說明文件
 搜尋回傳數目上限為40筆，按GPA排序
 ```
 
-### 系所查詢
+### 系所查詢 (department)
 ```
 🎓 系所 
 ⊕基本操作
@@ -85,7 +90,7 @@ help 或 /help 顯示說明文件
 隱藏專題研究課程
 ```
 
-### 教授查詢
+### 教授查詢 (professor)
 ```
 🎨 教師
 ⊕基本操作
