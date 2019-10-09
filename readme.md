@@ -28,13 +28,25 @@ https://line.me/R/ti/p/neIdhdWSlX
 
 ## Documentation
 ### Help
+
 ```
+💡 Help
+help or /help to show the help message
+
 💡 幫助 
 help 或 /help 顯示說明文件
 ```
 
 ### 課程查詢 (course)
 ```
+📕 Query for finding a course
+Example:
+  "Machine Learning"
+  "725 M2410"
+  
+Advanced:
+/c [course name|course number] -g [GPA] -y [semester]
+
 📕 課程查詢 
 ⊕基本操作
 輸入課名或課程識別碼
@@ -58,6 +70,17 @@ help 或 /help 顯示說明文件
 
 ### 系所查詢 (department)
 ```
+🎓 Query for finding a course on a specific department
+Example:
+  "EE Foundation"
+  "EE Elective HighGPA"
+  "IM Depth LowGPA"
+  
+Advanced:
+  /d [dept] [high/low gpa] [elective|depth|foundation]
+  -g [gpa]
+  -y [semester]
+
 🎓 系所 
 ⊕基本操作
 輸入系所名稱/代號，選/必修，以及甜度(以空格隔開)
@@ -92,6 +115,10 @@ help 或 /help 顯示說明文件
 
 ### 教授查詢 (professor)
 ```
+🎨 Query for finding courses of a professor
+Example:
+  "Teacher lckung"
+  
 🎨 教師
 ⊕基本操作
 輸入『師』+ 教師名稱
