@@ -3,7 +3,7 @@
     "body-parser": "^1.18.2",
     "bottender": "^0.14.34",
     "csvtojson": "^2.0.6",
-    "express": "^4.16.0",
+    "express": "^4.17.3",
     "minimist-string": "^1.0.2",
     "request": "^2.85.0",
     "sqlite3": "^4.0.0"
